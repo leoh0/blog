@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hash on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/hash/</link>
+    <description>Recent content in Hash on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Thu, 05 Feb 2015 17:21:56 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/hash/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>chef 12: node attribute style problem - feature or bug?</title>
+      <link>https://leoh0.github.io/post/2015-02-05-chef-12-feature-or-bug/</link>
+      <pubDate>Thu, 05 Feb 2015 17:21:56 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-05-chef-12-feature-or-bug/</guid>
+      <description>chef 12 client를 이용하면서 기존 recipe 들을 사용중 갑자기 작동 안하는 문제가 있었다.
+chef 12로 변화되며 추가된 기능인가 싶어 chef 12 release note를 뒤져보았지만 사실 관련된 부분을 찾지 못했다.
+대략 현상은 아래와 같다..
+chef &amp;gt; attributes_mode chef:attributes &amp;gt; default[&#39;haproxy&#39;][&#39;conf_dir&#39;] = &#39;aa&#39; chef:attributes &amp;gt; puts node[&#39;haproxy&#39;][&#39;conf_dir&#39;] aa chef:attributes &amp;gt; puts node[:haproxy][:conf_dir] aa chef:attributes &amp;gt; node.set[&#39;haproxy&#39;][&#39;conf_dir&#39;] = &#39;bb&#39; chef:attributes &amp;gt; puts node[&#39;haproxy&#39;][&#39;conf_dir&#39;] bb chef:attributes &amp;gt; puts node[:haproxy][:conf_dir] aa  위와 같이 string으로 된 hash와 symbol로 된 hash의 값이 merge가 안되는 문제이다.</description>
+    </item>
+    
+  </channel>
+</rss>

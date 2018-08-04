@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/post/</link>
+    <description>Recent content in Posts on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Mon, 21 May 2018 00:55:10 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>immutable kubernetes by linuxkit</title>
+      <link>https://leoh0.github.io/post/2018-05-21-immutable-kubernetes/</link>
+      <pubDate>Mon, 21 May 2018 00:55:10 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2018-05-21-immutable-kubernetes/</guid>
+      <description>&amp;hellip; As a developer and sometimes system administrator, one of the scariest things I ever encounter is a server that’s been running for ages which has seen multiple upgrades of system and application software. &amp;hellip; Need to upgrade? No problem. Build a new, upgraded system and throw the old one away. New app revision? Same thing. Build a server (or image) with a new revision and throw away the old ones.</description>
+    </item>
+    
+    <item>
+      <title>how to make unofficial kubernetes pdf documents 2</title>
+      <link>https://leoh0.github.io/post/2018-04-07-how-to-make-unofficial-kubernetes-pdf-documents-2/</link>
+      <pubDate>Sat, 07 Apr 2018 01:15:37 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2018-04-07-how-to-make-unofficial-kubernetes-pdf-documents-2/</guid>
+      <description>download k8s 1.10 pdf 이전 포스팅과 뭐가 다른가? 이전에 해보고 더이상 안할거라 생각했다가 우연히 다시 포스팅을 읽었다가 너무 복잡한거 같아서 docker로 제작했다.
+아래와 같이 사용할시 pdf를 뽑아 낼 수 있다.
+docker run -ti -v $PWD:/out3 leoh0/k8s-website-to-pdf  아니면 아래 dockerfile로 새로 제작해서 뽑아내면 된다. 참고
+docker build -t k8s-website-to-pdf . docker run -ti -v $PWD:/out3 k8s-website-to-pdf  우선 전체 dockerfile은 아래와 같다.
+# 참고 https://github.com/leoh0/k8s-website-to-pdf/blob/master/Dockerfile FROM alpine/git as source ARG BRANCH=master WORKDIR /app RUN git clone https://github.</description>
+    </item>
+    
+    <item>
+      <title>how to make unofficial kubernetes pdf documents</title>
+      <link>https://leoh0.github.io/post/2017-10-23-how-to-make-unofficial-kubernetes-pdf-documents/</link>
+      <pubDate>Mon, 23 Oct 2017 21:21:47 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2017-10-23-how-to-make-unofficial-kubernetes-pdf-documents/</guid>
+      <description>download pdf 왜? 밖에서 심심할때 종이로 출력해서 문서를 좀 더 봐야겠다는 생각에 pdf 버전을 구해보려고 했으나. 우선 k8s webpage를 관리하는 website프로젝트에서 아래와 같이 지원을 안한다고 딱잘라서 이야기 하는것을 찾았다.
+ &amp;hellip; we don&amp;rsquo;t plan to make PDFs available.
+ 그리고 마땅히 검색했을때 방법이 없기에 만들어야 겠다고 생각했다.
+어떻게 할까? 외부의 웹사이트를 pdf 로 출력하는 방법들은 여러가지가 있다 그냥 웹 주소를 넣으면 바로 pdf 로 변환해 주는 솔루션이나 사이트들도 많다.(물론 단일 페이지만 렌더링 한다.</description>
+    </item>
+    
+    <item>
+      <title>k8s tools for watching log and login to multiple containers</title>
+      <link>https://leoh0.github.io/post/2017-07-27-k8s-tools-for-watching-log-and-login-multiple-containers/</link>
+      <pubDate>Thu, 27 Jul 2017 00:58:28 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2017-07-27-k8s-tools-for-watching-log-and-login-multiple-containers/</guid>
+      <description>{% img /images/showterm-2017-07-27-01-10-29.png 780 290 %}
+k8s 사용하면서 개인 취향에 맞게 작성한 자작 스크립트 몇가지 소개해 드리려고 합니다.
+watching log k8s 에서 pod들의 로그 볼일 들이 많다보니 command 일일치다보니 불편했는데 kubetail이란 프로젝트가 있었습니다.
+덕분에 잘 쓰고 있었는데 인터페이스가 개인취향에 안맞아서 약간 수정해서 쓰고 있습니다.
+전반적으로 pod 선택 방법의 변경과 비슷한 이름으로 auto tailing 기능을 추가 했습니다.
+아래들이 대표적인 기능 입니다.
+ 선택된것과 같은 pod들을 전체 log tailing 하고 변화가 있을시 auto reload 함</description>
+    </item>
+    
+    <item>
+      <title>Install openstack on macos Sierra using kolla-kubernetes with xhyve</title>
+      <link>https://leoh0.github.io/post/2016-10-13-install-openstack-on-macos-sierra-using-kolla-kubernetes-and-xhyve/</link>
+      <pubDate>Thu, 13 Oct 2016 00:02:06 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-10-13-install-openstack-on-macos-sierra-using-kolla-kubernetes-and-xhyve/</guid>
+      <description>{% img /images/2016-10-13_00-04-57.jpg 924 533 %} 클릭해서 과정 보기
+kubernetes 로 openstack mitaka를 설치해 봤습니다.
+위의 이미지를 클릭하면 전과정을 보실 수 있습니다. 참고하시면 좋을 것 같습니다.
+대략 31분 정도 걸려서 minikube 구성 부터 전체 셋업 및 vm 2개 띄워서 로그인 테스트 합니다.
+그리고 저는 macos Sierra 에서 xhyve 로 8G 머신을 만들어서 사용을 했습니다.
+linux 머신이 있으면 kvm을 이용하시는 것도 좋을것 같습니다.
+windows 환경에선 xhyve 외에도 virtual box 등을 이용하셔도 좋을 것 같습니다.</description>
+    </item>
+    
+    <item>
+      <title>추가 - edit vagrant box for vagrant-libvirt</title>
+      <link>https://leoh0.github.io/post/2016-09-29-cuga-edit-vagrant-box-for-vagrant-libvirt/</link>
+      <pubDate>Thu, 29 Sep 2016 23:39:00 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-09-29-cuga-edit-vagrant-box-for-vagrant-libvirt/</guid>
+      <description> copy image and files mkdir -p images cp ~/.vagrant.d/boxes/${TARGETIMAGE}/0/libvirt/* images/ cd images  init apt-get install -qqy lvm2 modprobe nbd  attach qemu-nbd -c /dev/nbd0 `pwd`/box.img vgscan vgchange -ay mount /dev/mapper/vagrant--vg-root /mnt  bind binds=&amp;quot;/dev /dev/pts /proc /sys /run&amp;quot; for d in $binds; do mkdir -p /mnt${d} mount --bind ${d} /mnt${d} done  work chroot /mnt bash # blah blah blah exit  unbind and detach cd / for d in $(mount | awk &#39;/\/mnt/{print $3}&#39; | sort -r); do umount $d done vgchange -an vagrant-vg qemu-nbd -d /dev/nbd0  </description>
+    </item>
+    
+    <item>
+      <title>추가 - Keystone에서 Token Backend로 사용하는 Memcached가 Unbalanced되었다..</title>
+      <link>https://leoh0.github.io/post/2016-09-29-cuga-keystoneeseo-token-backendro-sayonghaneun-memcachedga-unbalanceddoeeossda-dot/</link>
+      <pubDate>Thu, 29 Sep 2016 23:30:20 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-09-29-cuga-keystoneeseo-token-backendro-sayonghaneun-memcachedga-unbalanceddoeeossda-dot/</guid>
+      <description>예전에 아래글을 그냥 balancing 을 위해 id 를 잘 분배하자 라는식으로 결론 냈지만.
+Keystone에서 Token Backend로 사용하는 Memcached가 Unbalanced되었다..
+user의 token리스트를 관리하지 않으면 부담은 훨씬 줄어든다.
+물론 user의 password 변경 등으로 기존 모든 token을 revoke 시키는 경우때문에 이런 user 단위로 token리스트를 관리해야 하지만
+그걸 포기하면 그냥 코드 몇줄 추가로 간단하게 정리할 수 있다.
+diff --git a/keystone/token/persistence/backends/memcache.py b/keystone/token/persistence/backends/memcache.py index e6b0fca..3f0de68 100644 --- a/keystone/token/persistence/backends/memcache.py +++ b/keystone/token/persistence/backends/memcache.py @@ -37,3 +37,6 @@ class Token(kvs.Token): kwargs[&#39;memcached_expire_time&#39;] = CONF.</description>
+    </item>
+    
+    <item>
+      <title>Mac os x - nslookup, host, dig works with /etc/resolv.conf, but ping, ssh doesnt work</title>
+      <link>https://leoh0.github.io/post/2016-05-17-mac-os-x-nslookup/</link>
+      <pubDate>Tue, 17 May 2016 02:24:09 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-05-17-mac-os-x-nslookup/</guid>
+      <description>{% img /images/2016-05-17_03-24-13.jpg 650 167 %}
+Mac os x 는 linux와 다른 resolving을 제공한다.
+간단하게만 이야기 하면 /etc/resolv.conf 외에도 /etc/resolver/* 에 원하는 dns명을 기록해 놓으면 해당 domain name을 갖을시 해당하는 nameserver로 쿼리를 할 수가 있다.
+예를 들어 아래와 같이 설정했다면 *.local 과 같은 도메인은 10.10.1.65로 dns 서버를 사용가능하다.
+$ cat /etc/resolver/local nameserver 10.10.1.65  다만 이건 nslookup, host, dig 와 같은 dns lookup command 들에서는 나타나지 않는다. 이런 커맨드는 linux와 같이 /etc/resolv.</description>
+    </item>
+    
+    <item>
+      <title>Management multiple openstack cluster with automatic openstack rc file loader script</title>
+      <link>https://leoh0.github.io/post/2016-05-10-management-multiple-openstack-cluster-with-automatic-openstack-rc-file-loader-script/</link>
+      <pubDate>Tue, 10 May 2016 01:08:56 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-05-10-management-multiple-openstack-cluster-with-automatic-openstack-rc-file-loader-script/</guid>
+      <description>{% img /images/2016-05-10_03-40-27.jpg 368 272 %}
+openstack rc file 여러 openstack 클러스터를 관리하려면 openstack rc file(이하 openrc file)을 잘 관리해야한다.
+이런 관리를 위해서 supernova 와 같은 rc file 관리해주는 툴들을 사용하게 된다.
+(개인적으로 비슷한 시기에 bash로 비슷한 아이디어로 구현해서 써서 사용하진 않았지만 이러한 관리 툴이 필요하다면 supernova를 참고하면 좋을것같다.)
+이런 툴들은 기본적으로 shell에 환경변수를 추가하는 방식이기에 폴더가 변경된다고 자동으로 로딩된다기 보다는
+유저가 어떤 rc file을 사용할지 로딩하여(트리거링하여) 써야한다.
+openstack rc file (normal version) 예를 들면 아래는 일반적으로 사용하는 익숙 한 예이다.</description>
+    </item>
+    
+    <item>
+      <title>keystone에서 token backend로 사용하는 memcached가 unbalanced되었다..</title>
+      <link>https://leoh0.github.io/post/2016-04-27-keystoneeseo-token-backendro-sayonghaneun-memcachedga-unbalanceddoeeossdamyeon-dot/</link>
+      <pubDate>Wed, 27 Apr 2016 00:00:45 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-04-27-keystoneeseo-token-backendro-sayonghaneun-memcachedga-unbalanceddoeeossdamyeon-dot/</guid>
+      <description>해당 클러스터는 kilo 버전으로 구성 되었었고 token 을 memcached 에 저장하고 있었다.
+또한 kilo 부터 dogpile.cache 는 거의 고정으로 들어가 있가 있어서 해당 모듈을 사용했다.
+이런 상황을 디버깅 했던 경험을 정리해 본다.
+아래는 문제가 되었던 memcached host의 in/out bound 그래프이다.
+수치는 가려서 스케일만 감으로 볼 수 있게 남겼다.
+A 서버 {% img /images/2016-04-26_23-50-30.png 508 122 A 서버 %}
+B 서버 {% img /images/2016-04-26_23-50-41.png 499 122 B 서버 %}
+최초엔 keystone과 memcached connection 이 unbalance 할것이라고 생각했으나 그런 정황은 없었다.</description>
+    </item>
+    
+    <item>
+      <title>mac에서 ntfs disk에 write 하기</title>
+      <link>https://leoh0.github.io/post/2015-11-03-maceseo-ntfs-diske-write-hagi/</link>
+      <pubDate>Tue, 03 Nov 2015 09:38:22 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-11-03-maceseo-ntfs-diske-write-hagi/</guid>
+      <description>GPT 일때 가능
+{% gist d07787e9dc635136de6a ntfs_mount.sh %}</description>
+    </item>
+    
+    <item>
+      <title>커맨드로 크롬에 떠 있는 유튜브 플레이중인 음악 mp3로 다운로드 하기</title>
+      <link>https://leoh0.github.io/post/2015-05-19-youtube-chrome-mp3-downloader/</link>
+      <pubDate>Tue, 19 May 2015 09:49:32 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-05-19-youtube-chrome-mp3-downloader/</guid>
+      <description>내가 듣는 음악 장르는 보통 스트리밍 서비스에서 찾을 수 가 없어서 보통 유튜브 자동재생을 켜놓고 음악을 듣는 편이다.
+그런데 이런 음악을 찾기 귀찮아서 mp3 파일로 다운로드 해두고 싶은일이 생긴다.
+{% img /images/unsun-whispers.png 452 239 unsun - whispers %}
+UNSUN - Whispers Youtube
+물론 그냥 아래 같이 youtube-dl와 같은 방법을 써도 된다.
+brew install youtube-dl youtube-dl -t --extract-audio --audio-format mp3 $YOUTUBEURL  하지만 일하는데 터미널에서 크롬으로 창을 포커스 바꾸고 url을 카피해서 저 커맨드를 넣는건 귀찮은 일이다.</description>
+    </item>
+    
+    <item>
+      <title>containerize openstack</title>
+      <link>https://leoh0.github.io/post/2015-04-24-containerize-openstack/</link>
+      <pubDate>Fri, 24 Apr 2015 01:08:16 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-04-24-containerize-openstack/</guid>
+      <description>docker 바깥으로 process를 낼 수 있는 방법들로 kvm 프로세스를 docker 바깥 host os 에 배치시키는 방법이 가능하네요.
+실질적으로 docker안에 kvm이 들어가게 된다면 docker process에 vm이 종속적이게 되어 불안정한 구성이 될테지만
+이런 방식으로 피해 갈 수도 있는 것을 확인했습니다.
+{% img /images/containerize-openstack.png 1440 829 containerize-openstack %}
+아무튼 사진과 같이 기묘한 형태로 (실제 host os 에는 없는 바이너리가 parent 1 을 물고 process 로 뜨게되는) 관리가 가능합니다.
+물론 보안 적인 결함에 대해서야 아직 끝도없이 이야기할 주제이겠지만 앞으로의 provisioning의 새로운 가능성에 대해서 관심이 가는건 사실인것 같습니다.</description>
+    </item>
+    
+    <item>
+      <title>가장 변태적인 linux command</title>
+      <link>https://leoh0.github.io/post/2015-04-24-gajang-byeontaejeogin-linux-command/</link>
+      <pubDate>Fri, 24 Apr 2015 00:28:38 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-04-24-gajang-byeontaejeogin-linux-command/</guid>
+      <description>ip command 는 linux network 쪽을 위해 굉장히 많이 사용되는 커맨드 이다.
+Usage: ip [ OPTIONS ] OBJECT { COMMAND | help } ip [ -force ] -batch filename where OBJECT := { link | addr | addrlabel | route | rule | neigh | ntable | tunnel | tuntap | maddr | mroute | mrule | monitor | xfrm | netns | l2tp | tcp_metrics | token } OPTIONS := { -V[ersion] | -s[tatistics] | -d[etails] | -r[esolve] | -f[amily] { inet | inet6 | ipx | dnet | bridge | link } | -4 | -6 | -I | -D | -B | -0 | -l[oops] { maximum-addr-flush-attempts } | -o[neline] | -t[imestamp] | -b[atch] [filename] | -rc[vbuf] [size]}  이 커맨드의 가장 변태적이라고 생각한 부분은 다음이다.</description>
+    </item>
+    
+    <item>
+      <title>draw openstack L2 network architecture automatically</title>
+      <link>https://leoh0.github.io/post/2015-04-03-draw-openstack-l2-network-architecture-automatically/</link>
+      <pubDate>Fri, 03 Apr 2015 02:29:52 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-04-03-draw-openstack-l2-network-architecture-automatically/</guid>
+      <description>iptables를 좀 보기 편하게 할 수 없는가를 이야기하다가 여기사이트를 보게되었다.
+그래서 감동을 받아서 이에 뭔가 남기고자 삽질을 했다. (어짜피 요새 deploy 테스트 하다보면 남는게 시간이다 보니..)
+대략 openstack neutron의 L2 architecture 에 구성요소들을 좀 보기 편하게 그린것이다.
+지금 tunnel architecture를 가진건 없어서 br-tun 쪽은 그리려고 테스트 하진 않았다. 다만 ovs 나 bridge 모드에서 대략적인 그림은 맘에 들게 그려지는 것 같다.
+ascii 로 그린 architecture 들이다.
+bridge-vlan {% img /images/draw-bridge-vlan.png 1312 544 bridge-vlan %}</description>
+    </item>
+    
+    <item>
+      <title>ping openstack vms in specific host</title>
+      <link>https://leoh0.github.io/post/2015-03-31-ping-openstack-vms-in-specific-host/</link>
+      <pubDate>Tue, 31 Mar 2015 09:36:44 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-03-31-ping-openstack-vms-in-specific-host/</guid>
+      <description>{% gist 261cc772f9bc5ab916b5 %}</description>
+    </item>
+    
+    <item>
+      <title>만약 사용자가 ssh password나 key등을 잃어 버려서 도저히 vm instance에 접속할 수 없을때..</title>
+      <link>https://leoh0.github.io/post/2015-03-14-if-you-forget-your-password-or-key/</link>
+      <pubDate>Sat, 14 Mar 2015 22:00:57 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-03-14-if-you-forget-your-password-or-key/</guid>
+      <description>우선은 nbd로 attach 하여 mount 해서 접근 가능하다.
+이후에 아래와 같이 key를 추가해도 되고 각 os 버전에 맞게 패스워드를 새로 해슁하여 /etc/shadow 를 변경해도 된다.
+물론 마지막에 dettach 를 꼭 신경써서 해줘야 한다.
+# attach disk qemu-nbd -c /dev/nbd0 /var/lib/nova/instances/10794bbb-7856-4ed6-ab39-32afbc01156a/disk mount /dev/nbd0p1 /mnt # insert a new key to target user echo &#39;&#39;&#39;NEWKEY&#39;&#39;&#39; &amp;gt;&amp;gt; /mnt/home/USER/.ssh/authorized_keys # dettach disk umount /mnt qemu-nbd -d /dev/nbd0p1  하지만 이상하게도 저런 수정을 했을때 아예 접속이 불가능한 경우들이 생긴다.</description>
+    </item>
+    
+    <item>
+      <title>custom URL for chef server 12</title>
+      <link>https://leoh0.github.io/post/2015-02-24-custom-url-for-chef-server-12/</link>
+      <pubDate>Tue, 24 Feb 2015 23:29:19 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-24-custom-url-for-chef-server-12/</guid>
+      <description>chef server ssl verification 때문에 그냥 domain 인증서를 제대로 적용하려고 했는데 엄청 삽질했다. 아마 chef 11 에서 chef 12 로 올라가면서 config 위치가 변경된거 같다.
+여기에서 관련 정보를 얻을 수 있었는데 차이점은 /etc/chef-server/chef-server.rb 가 아닌 /etc/opscode/chef-server.rb 파일을 수정해서 적용 가능했다.
+아래 처럼 해당 파일을 수정한다.
+... server_name = &amp;quot;chef.yourdomain.com&amp;quot; api_fqdn = server_name bookshelf[&#39;vip&#39;] = server_name nginx[&#39;url&#39;] = &amp;quot;https://#{server_name}&amp;quot; nginx[&#39;server_name&#39;] = server_name nginx[&#39;ssl_certificate&#39;] = &amp;quot;/var/opt/chef-server/nginx/ca/#{server_name}.crt&amp;quot; nginx[&#39;ssl_certificate_key&#39;] = &amp;quot;/var/opt/chef-server/nginx/ca/#{server_name}.key&amp;quot; lb[&#39;fqdn&#39;] = server_name  이후에 해당 컨피그 내용으로 적용한다.</description>
+    </item>
+    
+    <item>
+      <title>edit vagrant box for vagrant-libvirt</title>
+      <link>https://leoh0.github.io/post/2015-02-24-edit-vagrant-box-for-vagrant-libvirt/</link>
+      <pubDate>Tue, 24 Feb 2015 13:22:36 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-24-edit-vagrant-box-for-vagrant-libvirt/</guid>
+      <description> check file $ file trusty64_vagrant_box_image.img trusty64_vagrant_box_image.img: QEMU QCOW Image (unknown version)  init apt-get install -qqy lvm2 modprobe nbd  attach cd /var/lib/libvirt/images qemu-nbd -c /dev/nbd0 `pwd`/trusty64_vagrant_box_image.img vgscan vgchange -ay mount /dev/mapper/vagrant--vg-root /mnt  detach cd / umount /mnt vgchange -an vagrant-vg qemu-nbd -d /dev/nbd0  </description>
+    </item>
+    
+    <item>
+      <title>NIC 1개로 compute node를 vlan type으로 neutron을 사용하여 구성하기 위한 팁</title>
+      <link>https://leoh0.github.io/post/2015-02-11-build-openstack-node-using-just-1-nic/</link>
+      <pubDate>Wed, 11 Feb 2015 17:12:39 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-11-build-openstack-node-using-just-1-nic/</guid>
+      <description>gre 같은 tunnel 을 사용한다면 NIC 하나로 구성 할 수 있겠지만 그게 아니라면 일반적으로는 management 용 NIC 한개와 service 용 NIC 한개가 필요하다.
+우선 아래와 같은 상태가 2 NIC을 사용하는 일반적인 구성이다.
+그림 처럼 eth0은 management를 위한 ip로 이용되며 eth1을 guest interface(vlan 이라면 0.0.0.0)로 사용할 수 있다.
+{% img /images/1nic-neutron-1.png 449 487 %}
+단도직입적으로 ethernet 한개로는 아래와 같이 구성하면 된다.
+우선 eth0은 0.0.0.0 으로 ip를 사용안하는 대신 br0 부분에서 기존의 management용 ip를 가져간다.</description>
+    </item>
+    
+    <item>
+      <title>chef 12: node attribute style problem - feature or bug?</title>
+      <link>https://leoh0.github.io/post/2015-02-05-chef-12-feature-or-bug/</link>
+      <pubDate>Thu, 05 Feb 2015 17:21:56 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-05-chef-12-feature-or-bug/</guid>
+      <description>chef 12 client를 이용하면서 기존 recipe 들을 사용중 갑자기 작동 안하는 문제가 있었다.
+chef 12로 변화되며 추가된 기능인가 싶어 chef 12 release note를 뒤져보았지만 사실 관련된 부분을 찾지 못했다.
+대략 현상은 아래와 같다..
+chef &amp;gt; attributes_mode chef:attributes &amp;gt; default[&#39;haproxy&#39;][&#39;conf_dir&#39;] = &#39;aa&#39; chef:attributes &amp;gt; puts node[&#39;haproxy&#39;][&#39;conf_dir&#39;] aa chef:attributes &amp;gt; puts node[:haproxy][:conf_dir] aa chef:attributes &amp;gt; node.set[&#39;haproxy&#39;][&#39;conf_dir&#39;] = &#39;bb&#39; chef:attributes &amp;gt; puts node[&#39;haproxy&#39;][&#39;conf_dir&#39;] bb chef:attributes &amp;gt; puts node[:haproxy][:conf_dir] aa  위와 같이 string으로 된 hash와 symbol로 된 hash의 값이 merge가 안되는 문제이다.</description>
+    </item>
+    
+    <item>
+      <title>make l2 network for vm without neutron</title>
+      <link>https://leoh0.github.io/post/2015-02-02-make-l2-network-for-vm-without-neutron/</link>
+      <pubDate>Mon, 02 Feb 2015 09:20:23 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-02-make-l2-network-for-vm-without-neutron/</guid>
+      <description>우선 아래와 같은 컨피그를 이용할때..
+nova  linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver  neutron  type_drivers = vlan mechanism_drivers = openvswitch firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver  1. 기본 상태: 우선 실제 물리 머신에 아래와 같이 vm을 위한 ethernet인 eth1이 존재한다.
+{% img /images/neutron-nova-network-1.jpg 497 395 %}
+변수 생성 vmuuid=9ee8db25-6a13-4ca8-8a4e-495db24492ca vlan=2001 localvlan=1 ip=$(nova show $vmuuid | grep &#39; network&#39; | awk &#39;{print $5}&#39;) interfaceid=$(neutron port-list | grep &amp;quot;\&amp;quot;$ip\&amp;quot;&amp;quot; | awk &#39;{print $2}&#39;) mac=$(neutron port-list | grep &amp;quot;\&amp;quot;$ip\&amp;quot;&amp;quot; | awk &#39;{print $5}&#39;) ovsid=${interfaceid:0:11}  2.</description>
+    </item>
+    
+    <item>
+      <title>ceph pg incomplete: rbd image-format 2 data recovery</title>
+      <link>https://leoh0.github.io/post/2015-01-16-jiogyi-ceph-rbd-image-format-2-data-recovering/</link>
+      <pubDate>Fri, 16 Jan 2015 00:54:53 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-01-16-jiogyi-ceph-rbd-image-format-2-data-recovering/</guid>
+      <description>ceph: pg incomplete is worst nightmare {% img http://a1.res.cloudinary.com/hqq9ey1mh/image/upload/c_limit,w_793/v1414983220/z3vn1zndif6v7q2u08w1.png 500 500 &amp;ldquo;2014 open user survey block storage&amp;rdquo; %}
+2014년 유저 설문조사에서 찾을 수 있듯이 ceph은 openstack의 block storage의 de facto standard 라고 말할 수 있다.
+ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일명 믿음의 ceph이라고 칭송하며 내부구조도 살필일 없이 블랙박스로 두고 잘 쓰고 있었었다.
+하지만 근래에 급작스런 몇가지 문제로 ceph의 placement group(pg) 들이 incomplete 상태로 떨어졌고..
+말그대로 절망했다.</description>
+    </item>
+    
+    <item>
+      <title>이사</title>
+      <link>https://leoh0.github.io/post/2015-01-15-isa/</link>
+      <pubDate>Thu, 15 Jan 2015 17:58:18 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-01-15-isa/</guid>
+      <description>RIP 20140404 https://leoh0.wordpress.com
+RIP 20150115 http://leoh0.blogspot.kr
+제일 처음 wordpress 블로그를 썼을때 다 만족스러웠지만 왠지 구글 검색에 노출되는 시간이 오래 걸리는 기분이 있었다..
+그래서 blogspot 으로 옮겨 갔으나..
+하지만 부족한 템플릿과 플러그인..
+그리고 소스 코드 삽입시 html 코드를 작성해야하는데 이게 너무 지저분해서 맘에 들지 않았다.
+그래서 결국 소스 코드를 가장 이쁘게 보여 줄 수 있는 octopress로..</description>
+    </item>
+    
+  </channel>
+</rss>

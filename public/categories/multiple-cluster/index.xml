@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Multiple Cluster on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/multiple-cluster/</link>
+    <description>Recent content in Multiple Cluster on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Tue, 10 May 2016 01:08:56 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/multiple-cluster/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Management multiple openstack cluster with automatic openstack rc file loader script</title>
+      <link>https://leoh0.github.io/post/2016-05-10-management-multiple-openstack-cluster-with-automatic-openstack-rc-file-loader-script/</link>
+      <pubDate>Tue, 10 May 2016 01:08:56 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-05-10-management-multiple-openstack-cluster-with-automatic-openstack-rc-file-loader-script/</guid>
+      <description>{% img /images/2016-05-10_03-40-27.jpg 368 272 %}
+openstack rc file 여러 openstack 클러스터를 관리하려면 openstack rc file(이하 openrc file)을 잘 관리해야한다.
+이런 관리를 위해서 supernova 와 같은 rc file 관리해주는 툴들을 사용하게 된다.
+(개인적으로 비슷한 시기에 bash로 비슷한 아이디어로 구현해서 써서 사용하진 않았지만 이러한 관리 툴이 필요하다면 supernova를 참고하면 좋을것같다.)
+이런 툴들은 기본적으로 shell에 환경변수를 추가하는 방식이기에 폴더가 변경된다고 자동으로 로딩된다기 보다는
+유저가 어떤 rc file을 사용할지 로딩하여(트리거링하여) 써야한다.
+openstack rc file (normal version) 예를 들면 아래는 일반적으로 사용하는 익숙 한 예이다.</description>
+    </item>
+    
+  </channel>
+</rss>

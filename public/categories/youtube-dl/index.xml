@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Youtube Dl on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/youtube-dl/</link>
+    <description>Recent content in Youtube Dl on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Tue, 19 May 2015 09:49:32 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/youtube-dl/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>커맨드로 크롬에 떠 있는 유튜브 플레이중인 음악 mp3로 다운로드 하기</title>
+      <link>https://leoh0.github.io/post/2015-05-19-youtube-chrome-mp3-downloader/</link>
+      <pubDate>Tue, 19 May 2015 09:49:32 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-05-19-youtube-chrome-mp3-downloader/</guid>
+      <description>내가 듣는 음악 장르는 보통 스트리밍 서비스에서 찾을 수 가 없어서 보통 유튜브 자동재생을 켜놓고 음악을 듣는 편이다.
+그런데 이런 음악을 찾기 귀찮아서 mp3 파일로 다운로드 해두고 싶은일이 생긴다.
+{% img /images/unsun-whispers.png 452 239 unsun - whispers %}
+UNSUN - Whispers Youtube
+물론 그냥 아래 같이 youtube-dl와 같은 방법을 써도 된다.
+brew install youtube-dl youtube-dl -t --extract-audio --audio-format mp3 $YOUTUBEURL  하지만 일하는데 터미널에서 크롬으로 창을 포커스 바꾸고 url을 카피해서 저 커맨드를 넣는건 귀찮은 일이다.</description>
+    </item>
+    
+  </channel>
+</rss>

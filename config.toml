@@ -1,7 +1,7 @@
 baseurl = "https://leoh0.github.io/" # Controls base URL sitewide
-languageCode = "en-US" # Controls site language
+languageCode = "ko-KR" # Controls site language
 title = "> /dev/null" # Homepage title and page title suffix
-paginate = 11 # Number of posts to show before paginating
+paginate = 5 # Number of posts to show before paginating
 toc = true
 
 # Controls default theme and theme components

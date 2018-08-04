@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ssh Login Fail on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/ssh-login-fail/</link>
+    <description>Recent content in Ssh Login Fail on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Sat, 14 Mar 2015 22:00:57 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/ssh-login-fail/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>만약 사용자가 ssh password나 key등을 잃어 버려서 도저히 vm instance에 접속할 수 없을때..</title>
+      <link>https://leoh0.github.io/post/2015-03-14-if-you-forget-your-password-or-key/</link>
+      <pubDate>Sat, 14 Mar 2015 22:00:57 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-03-14-if-you-forget-your-password-or-key/</guid>
+      <description>우선은 nbd로 attach 하여 mount 해서 접근 가능하다.
+이후에 아래와 같이 key를 추가해도 되고 각 os 버전에 맞게 패스워드를 새로 해슁하여 /etc/shadow 를 변경해도 된다.
+물론 마지막에 dettach 를 꼭 신경써서 해줘야 한다.
+# attach disk qemu-nbd -c /dev/nbd0 /var/lib/nova/instances/10794bbb-7856-4ed6-ab39-32afbc01156a/disk mount /dev/nbd0p1 /mnt # insert a new key to target user echo &#39;&#39;&#39;NEWKEY&#39;&#39;&#39; &amp;gt;&amp;gt; /mnt/home/USER/.ssh/authorized_keys # dettach disk umount /mnt qemu-nbd -d /dev/nbd0p1  하지만 이상하게도 저런 수정을 했을때 아예 접속이 불가능한 경우들이 생긴다.</description>
+    </item>
+    
+  </channel>
+</rss>

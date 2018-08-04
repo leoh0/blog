@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pg on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/pg/</link>
+    <description>Recent content in Pg on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Fri, 16 Jan 2015 00:54:53 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/pg/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>ceph pg incomplete: rbd image-format 2 data recovery</title>
+      <link>https://leoh0.github.io/post/2015-01-16-jiogyi-ceph-rbd-image-format-2-data-recovering/</link>
+      <pubDate>Fri, 16 Jan 2015 00:54:53 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-01-16-jiogyi-ceph-rbd-image-format-2-data-recovering/</guid>
+      <description>ceph: pg incomplete is worst nightmare {% img http://a1.res.cloudinary.com/hqq9ey1mh/image/upload/c_limit,w_793/v1414983220/z3vn1zndif6v7q2u08w1.png 500 500 &amp;ldquo;2014 open user survey block storage&amp;rdquo; %}
+2014년 유저 설문조사에서 찾을 수 있듯이 ceph은 openstack의 block storage의 de facto standard 라고 말할 수 있다.
+ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일명 믿음의 ceph이라고 칭송하며 내부구조도 살필일 없이 블랙박스로 두고 잘 쓰고 있었었다.
+하지만 근래에 급작스런 몇가지 문제로 ceph의 placement group(pg) 들이 incomplete 상태로 떨어졌고..
+말그대로 절망했다.</description>
+    </item>
+    
+  </channel>
+</rss>

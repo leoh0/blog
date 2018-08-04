@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ghostscript on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/ghostscript/</link>
+    <description>Recent content in Ghostscript on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Sat, 07 Apr 2018 01:15:37 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/ghostscript/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>how to make unofficial kubernetes pdf documents 2</title>
+      <link>https://leoh0.github.io/post/2018-04-07-how-to-make-unofficial-kubernetes-pdf-documents-2/</link>
+      <pubDate>Sat, 07 Apr 2018 01:15:37 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2018-04-07-how-to-make-unofficial-kubernetes-pdf-documents-2/</guid>
+      <description>download k8s 1.10 pdf 이전 포스팅과 뭐가 다른가? 이전에 해보고 더이상 안할거라 생각했다가 우연히 다시 포스팅을 읽었다가 너무 복잡한거 같아서 docker로 제작했다.
+아래와 같이 사용할시 pdf를 뽑아 낼 수 있다.
+docker run -ti -v $PWD:/out3 leoh0/k8s-website-to-pdf  아니면 아래 dockerfile로 새로 제작해서 뽑아내면 된다. 참고
+docker build -t k8s-website-to-pdf . docker run -ti -v $PWD:/out3 k8s-website-to-pdf  우선 전체 dockerfile은 아래와 같다.
+# 참고 https://github.com/leoh0/k8s-website-to-pdf/blob/master/Dockerfile FROM alpine/git as source ARG BRANCH=master WORKDIR /app RUN git clone https://github.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vpn on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/vpn/</link>
+    <description>Recent content in Vpn on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Tue, 17 May 2016 02:24:09 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/vpn/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Mac os x - nslookup, host, dig works with /etc/resolv.conf, but ping, ssh doesnt work</title>
+      <link>https://leoh0.github.io/post/2016-05-17-mac-os-x-nslookup/</link>
+      <pubDate>Tue, 17 May 2016 02:24:09 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2016-05-17-mac-os-x-nslookup/</guid>
+      <description>{% img /images/2016-05-17_03-24-13.jpg 650 167 %}
+Mac os x 는 linux와 다른 resolving을 제공한다.
+간단하게만 이야기 하면 /etc/resolv.conf 외에도 /etc/resolver/* 에 원하는 dns명을 기록해 놓으면 해당 domain name을 갖을시 해당하는 nameserver로 쿼리를 할 수가 있다.
+예를 들어 아래와 같이 설정했다면 *.local 과 같은 도메인은 10.10.1.65로 dns 서버를 사용가능하다.
+$ cat /etc/resolver/local nameserver 10.10.1.65  다만 이건 nslookup, host, dig 와 같은 dns lookup command 들에서는 나타나지 않는다. 이런 커맨드는 linux와 같이 /etc/resolv.</description>
+    </item>
+    
+  </channel>
+</rss>

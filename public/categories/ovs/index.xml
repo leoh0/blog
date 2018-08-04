@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ovs on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/ovs/</link>
+    <description>Recent content in Ovs on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Mon, 02 Feb 2015 09:20:23 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/ovs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>make l2 network for vm without neutron</title>
+      <link>https://leoh0.github.io/post/2015-02-02-make-l2-network-for-vm-without-neutron/</link>
+      <pubDate>Mon, 02 Feb 2015 09:20:23 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-02-make-l2-network-for-vm-without-neutron/</guid>
+      <description>우선 아래와 같은 컨피그를 이용할때..
+nova  linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver  neutron  type_drivers = vlan mechanism_drivers = openvswitch firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver  1. 기본 상태: 우선 실제 물리 머신에 아래와 같이 vm을 위한 ethernet인 eth1이 존재한다.
+{% img /images/neutron-nova-network-1.jpg 497 395 %}
+변수 생성 vmuuid=9ee8db25-6a13-4ca8-8a4e-495db24492ca vlan=2001 localvlan=1 ip=$(nova show $vmuuid | grep &#39; network&#39; | awk &#39;{print $5}&#39;) interfaceid=$(neutron port-list | grep &amp;quot;\&amp;quot;$ip\&amp;quot;&amp;quot; | awk &#39;{print $2}&#39;) mac=$(neutron port-list | grep &amp;quot;\&amp;quot;$ip\&amp;quot;&amp;quot; | awk &#39;{print $5}&#39;) ovsid=${interfaceid:0:11}  2.</description>
+    </item>
+    
+  </channel>
+</rss>

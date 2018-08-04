@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Openvswitch on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/openvswitch/</link>
+    <description>Recent content in Openvswitch on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Fri, 03 Apr 2015 02:29:52 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/openvswitch/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>draw openstack L2 network architecture automatically</title>
+      <link>https://leoh0.github.io/post/2015-04-03-draw-openstack-l2-network-architecture-automatically/</link>
+      <pubDate>Fri, 03 Apr 2015 02:29:52 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-04-03-draw-openstack-l2-network-architecture-automatically/</guid>
+      <description>iptables를 좀 보기 편하게 할 수 없는가를 이야기하다가 여기사이트를 보게되었다.
+그래서 감동을 받아서 이에 뭔가 남기고자 삽질을 했다. (어짜피 요새 deploy 테스트 하다보면 남는게 시간이다 보니..)
+대략 openstack neutron의 L2 architecture 에 구성요소들을 좀 보기 편하게 그린것이다.
+지금 tunnel architecture를 가진건 없어서 br-tun 쪽은 그리려고 테스트 하진 않았다. 다만 ovs 나 bridge 모드에서 대략적인 그림은 맘에 들게 그려지는 것 같다.
+ascii 로 그린 architecture 들이다.
+bridge-vlan {% img /images/draw-bridge-vlan.png 1312 544 bridge-vlan %}</description>
+    </item>
+    
+    <item>
+      <title>NIC 1개로 compute node를 vlan type으로 neutron을 사용하여 구성하기 위한 팁</title>
+      <link>https://leoh0.github.io/post/2015-02-11-build-openstack-node-using-just-1-nic/</link>
+      <pubDate>Wed, 11 Feb 2015 17:12:39 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-11-build-openstack-node-using-just-1-nic/</guid>
+      <description>gre 같은 tunnel 을 사용한다면 NIC 하나로 구성 할 수 있겠지만 그게 아니라면 일반적으로는 management 용 NIC 한개와 service 용 NIC 한개가 필요하다.
+우선 아래와 같은 상태가 2 NIC을 사용하는 일반적인 구성이다.
+그림 처럼 eth0은 management를 위한 ip로 이용되며 eth1을 guest interface(vlan 이라면 0.0.0.0)로 사용할 수 있다.
+{% img /images/1nic-neutron-1.png 449 487 %}
+단도직입적으로 ethernet 한개로는 아래와 같이 구성하면 된다.
+우선 eth0은 0.0.0.0 으로 ip를 사용안하는 대신 br0 부분에서 기존의 management용 ip를 가져간다.</description>
+    </item>
+    
+    <item>
+      <title>make l2 network for vm without neutron</title>
+      <link>https://leoh0.github.io/post/2015-02-02-make-l2-network-for-vm-without-neutron/</link>
+      <pubDate>Mon, 02 Feb 2015 09:20:23 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-02-make-l2-network-for-vm-without-neutron/</guid>
+      <description>우선 아래와 같은 컨피그를 이용할때..
+nova  linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver  neutron  type_drivers = vlan mechanism_drivers = openvswitch firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver  1. 기본 상태: 우선 실제 물리 머신에 아래와 같이 vm을 위한 ethernet인 eth1이 존재한다.
+{% img /images/neutron-nova-network-1.jpg 497 395 %}
+변수 생성 vmuuid=9ee8db25-6a13-4ca8-8a4e-495db24492ca vlan=2001 localvlan=1 ip=$(nova show $vmuuid | grep &#39; network&#39; | awk &#39;{print $5}&#39;) interfaceid=$(neutron port-list | grep &amp;quot;\&amp;quot;$ip\&amp;quot;&amp;quot; | awk &#39;{print $2}&#39;) mac=$(neutron port-list | grep &amp;quot;\&amp;quot;$ip\&amp;quot;&amp;quot; | awk &#39;{print $5}&#39;) ovsid=${interfaceid:0:11}  2.</description>
+    </item>
+    
+  </channel>
+</rss>

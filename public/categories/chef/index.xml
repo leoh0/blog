@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Chef on &gt; /dev/null</title>
+    <link>https://leoh0.github.io/categories/chef/</link>
+    <description>Recent content in Chef on &gt; /dev/null</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ko-KR</language>
+    <lastBuildDate>Tue, 24 Feb 2015 23:29:19 +0900</lastBuildDate>
+    
+	<atom:link href="https://leoh0.github.io/categories/chef/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>custom URL for chef server 12</title>
+      <link>https://leoh0.github.io/post/2015-02-24-custom-url-for-chef-server-12/</link>
+      <pubDate>Tue, 24 Feb 2015 23:29:19 +0900</pubDate>
+      
+      <guid>https://leoh0.github.io/post/2015-02-24-custom-url-for-chef-server-12/</guid>
+      <description>chef server ssl verification 때문에 그냥 domain 인증서를 제대로 적용하려고 했는데 엄청 삽질했다. 아마 chef 11 에서 chef 12 로 올라가면서 config 위치가 변경된거 같다.
+여기에서 관련 정보를 얻을 수 있었는데 차이점은 /etc/chef-server/chef-server.rb 가 아닌 /etc/opscode/chef-server.rb 파일을 수정해서 적용 가능했다.
+아래 처럼 해당 파일을 수정한다.
+... server_name = &amp;quot;chef.yourdomain.com&amp;quot; api_fqdn = server_name bookshelf[&#39;vip&#39;] = server_name nginx[&#39;url&#39;] = &amp;quot;https://#{server_name}&amp;quot; nginx[&#39;server_name&#39;] = server_name nginx[&#39;ssl_certificate&#39;] = &amp;quot;/var/opt/chef-server/nginx/ca/#{server_name}.crt&amp;quot; nginx[&#39;ssl_certificate_key&#39;] = &amp;quot;/var/opt/chef-server/nginx/ca/#{server_name}.key&amp;quot; lb[&#39;fqdn&#39;] = server_name  이후에 해당 컨피그 내용으로 적용한다.</description>
+    </item>
+    
+  </channel>
+</rss>
