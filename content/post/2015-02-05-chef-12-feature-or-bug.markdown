@@ -72,7 +72,8 @@ foodcritic -t ~FC001 .
 
 그렇다면 사용자들이 선호하는 것은 어떨까?   
 아래와 같이 3종류의 attribute 사용법에 대한 [user survey](https://www.evernote.com/shard/s5/sh/1fc5a0c9-bdd0-44f4-8f5a-ed2ddc9d2cfd/a13f36acd7cfa2a468f7829e5549209f)에 대한 조사는 아래와 같이 symbol이 우세하다.
-{% img /images/fc001-survey-20121029-144804.jpg 1524 1164 fc001-survey-20121029-144804.png %}
+
+{{< figure src="/images/fc001-survey-20121029-144804.jpg" >}}
 
 그리고 실제 [ruby style guide](https://github.com/bbatsov/ruby-style-guide)에서도 물론 특정한 규정은 없어서..   
 그렇다고 괜히 `string`을 선호하는 건 아니다. 자세한 이유는 [여기1](https://github.com/acrmp/foodcritic/issues/1) [여기2](https://github.com/acrmp/foodcritic/issues/86) 를 읽어 보면 도움이 될듯 하다. 

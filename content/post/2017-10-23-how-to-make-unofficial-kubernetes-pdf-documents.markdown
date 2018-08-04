@@ -16,7 +16,7 @@ categories:
 - unofficial
 ---
 
-![kubernetes](/images/kubernetes-production-grade-container-orchestration.png)
+{{< figure src="/images/kubernetes-production-grade-container-orchestration.png" title="kubernetes" >}}
 
 ### [download pdf](/images/kubernetes-documents.pdf)
 
@@ -65,7 +65,7 @@ $ make build
 아래와 같이 왼쪽 도큐먼트 리스트들 기준으로 출력하고자 해당 페이지만 아래와 같은 스크립트로 추출했다.
 여기에 아무래도 api spec과 같은 양이 많은 reference 를 제외하고, 또 포맷이 안맞는 외부링크 제외한 페이지를 필터링 했다.
 
-![image](/images/k8sdocstoc.png)
+{{< figure src="/images/k8sdocstoc.png" >}}
 
 ```
 $ cd _site/docs/

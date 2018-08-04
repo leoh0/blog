@@ -16,7 +16,7 @@ categories:
 - junos pulse
 ---
 
-{% img /images/2016-05-17_03-24-13.jpg 650 167 %}
+{{< figure src="/images/2016-05-17_03-24-13.jpg" >}}
 
 Mac os x 는 linux와 다른 resolving을 제공한다.
 

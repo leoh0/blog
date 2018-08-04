@@ -21,7 +21,7 @@ user의 token리스트를 관리하지 않으면 부담은 훨씬 줄어든다.
 물론 user의 password 변경 등으로 기존 모든 token을 revoke 시키는 경우때문에 이런 user 단위로 token리스트를 관리해야 하지만    
 그걸 포기하면 그냥 코드 몇줄 추가로 간단하게 정리할 수 있다.
 
-``` diff
+{{< highlight diff >}}
 diff --git a/keystone/token/persistence/backends/memcache.py b/keystone/token/persistence/backends/memcache.py
 index e6b0fca..3f0de68 100644
 --- a/keystone/token/persistence/backends/memcache.py
@@ -33,4 +33,4 @@ index e6b0fca..3f0de68 100644
 +
 +    def _update_user_token_list(self, user_key, token_id, expires_isotime_str):
 +        return []
-```
+{{< /highlight >}}

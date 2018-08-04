@@ -20,10 +20,10 @@ categories:
 수치는 가려서 스케일만 감으로 볼 수 있게 남겼다.
 
 **A 서버**
-{% img /images/2016-04-26_23-50-30.png 508 122 A 서버 %}
+{{< figure src="/images/2016-04-26_23-50-30.png" title="A 서버" >}}
 
 **B 서버**
-{% img /images/2016-04-26_23-50-41.png 499 122 B 서버 %}
+{{< figure src="/images/2016-04-26_23-50-41.png" title="B 서버" >}}
 
 최초엔 keystone과 memcached connection 이 unbalance 할것이라고 생각했으나 그런 정황은 없었다.    (connection 개수가 일정) 그리고 특별히 keystone 로그에도 별다른 문제가 보이지 않았다.    
 memcache key 개수는 심지어 **A 서버**가 많았다.
@@ -35,7 +35,7 @@ memcache key 개수는 심지어 **A 서버**가 많았다.
 
 대부분의 token 데이터는 `3f786850e387550fdab836ed7e6dc881de23001b` 정도와 같이 PKI가 아닌 UUID token data여서 10000 b 정도를 구성하고 있었기 때문에 `크기`가 더 눈에 띈다.
 
-```
+{{< highlight bash>}}
 $ for i in $(echo 'stats items' | nc localhost 11211 | cut -d':' -f2 | sort -u | grep -v END); do
     echo "stats cachedump $i 1" | nc localhost 11211
 done
@@ -45,12 +45,12 @@ END
 ITEM 6e49b86a7502dae881f3b9466ecbdfa4743c7eb9 [578966 b; 1461688011 s]
 END
 ...
-```
+{{< /highlight>}}
 
 그렇다면 이 키를 열어 보면 아래와 같다.    
 ( 참고로 아래 커맨드를 쓰기위해선 `dogpile.cache` 가 인스톨 되어 있어야 한다. )
 
-```
+{{< highlight bash>}}
 $ echo get 6e49b86a7502dae881f3b9466ecbdfa4743c7eb9 | nc localhost 11211 | python -c '
 import sys
 import cPickle
@@ -88,7 +88,7 @@ except (cPickle.UnpicklingError, EOFError):
         "v": 1
     }
 ]
-```
+{{< /highlight >}}
 
 위와 같이 되어 있고 알고 보면 특정 토큰들과 그 토큰이 issue 된 시간이 적혀 있는 [리스트](https://github.com/openstack/keystone/blob/stable/kilo/keystone/token/persistence/backends/kvs.py#L155-L188) 이다.    
 이 키의 리스트는 유저별로 token의 expire time을 관리하는 값으로 해당 user에게 token이 발급 되거나 expire 될때마다 해당 리스트를 memcache로 부터 가져와서(`get`) 다시 업로드(`set`) 한다.    
@@ -110,17 +110,17 @@ $ openstack user show ceilometer
 
 eef939600bc111e69aeb57d4fa849231 이값은 아래와 같이 prefix가 붙고 hash 되서 key 값으로 사용된다.
  
-```   
+{{< highlight bash >}}
 $ echo -n 'usertokens-eef939600bc111e69aeb57d4fa849231' | sha1sum
 6e49b86a7502dae881f3b9466ecbdfa4743c7eb9  -
-```
+{{< /highlight >}}
 
 즉, `6e49b86a7502dae881f3b9466ecbdfa4743c7eb9`은 가 key이 기때문에 위의 토큰 리스트는 ceilometer의 토큰 리스트인걸 알 수 있다.    
 
 마지막으로 아래와 같이 계산해 보면 어떤 멤캐쉬에 들어갈 지 알수 있다. ([cmemcache_hash](https://github.com/linsomniac/python-memcached/blob/master/memcache.py#L63-L66) 참고)    
 여기에서는 `3065` 가 나왔기 때문에 멤캐쉬 서버가 두대이면 두번째(`3016%2=1`) 서버로 들어가게 된다.
  
-```   
+{{< highlight bash>}}
 $ echo -n '6e49b86a7502dae881f3b9466ecbdfa4743c7eb9' | python -c '
 import sys,binascii
 print (
@@ -128,7 +128,7 @@ print (
        >> 16) & 0x7fff) or 1)
 '
 3065
-```
+{{< /highlight >}}
 
 나의 케이스는 불운 하게도 이런 많은 토큰을 같은 유저(ceilometer, neutron, nova 등)가 전부 해쉬값이 홀수가 나와서 한 memcached host에 할당되었고, 이때문에 한쪽으로 skew 가 있었다.
 
@@ -140,7 +140,7 @@ print (
 
 사족으로 토큰이 어떤 내용을 담고 있는지는 아래 같은 스크립트로 찾으면 편하다.
 
-```
+{{< highlight bash>}}
 MEMCACHES='serverA serverB'
 for h in $MEMCACHES; do
   echo $h
@@ -157,4 +157,4 @@ except (cPickle.UnpicklingError, EOFError):
     print ''
 ' | python -mjson.tool
 done
-```
+{{< /highlight >}}

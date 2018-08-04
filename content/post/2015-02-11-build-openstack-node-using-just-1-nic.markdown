@@ -16,14 +16,13 @@ gre 같은 tunnel 을 사용한다면 NIC 하나로 구성 할 수 있겠지만 
 
 그림 처럼 eth0은 management를 위한 ip로 이용되며 eth1을 guest interface(vlan 이라면 0.0.0.0)로 사용할 수 있다.
 
-{% img /images/1nic-neutron-1.png 449 487 %}
-
+{{< figure src="/images/1nic-neutron-1.png" >}}
 
 단도직입적으로 ethernet 한개로는 아래와 같이 구성하면 된다.
 
 우선 eth0은 0.0.0.0 으로 ip를 사용안하는 대신 br0 부분에서 기존의 management용 ip를 가져간다.
 
-{% img /images/1nic-neutron-2.png 449 487 %}
+{{< figure src="/images/1nic-neutron-2.png" >}}
 
 아래와 같은 흐름으로 진행하면 된다.
 

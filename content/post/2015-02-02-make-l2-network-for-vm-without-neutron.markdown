@@ -22,7 +22,7 @@ categories:
 ## 1. 기본 상태:
 우선 실제 물리 머신에 아래와 같이 vm을 위한 ethernet인 eth1이 존재한다.
 
-{% img /images/neutron-nova-network-1.jpg 497 395 %}
+{{< figure src="/images/neutron-nova-network-1.jpg" >}}
 
 ### 변수 생성
 ``` bash
@@ -39,7 +39,7 @@ ovsid=${interfaceid:0:11}
 eth1에 연결된 br-eth1 bridge를 생성한다.
 또한 gre, vlan등의 다양한 type들의 네트워크를 연결시켜 줄 수 있는 br-int bridge를 생성한다.
 
-{% img /images/neutron-nova-network-2.jpg 497 395 %}
+{{< figure src="/images/neutron-nova-network-2.jpg" >}}
 
 ### user가 생성 필요
 ``` bash
@@ -50,7 +50,7 @@ ovs-vsctl --timeout=10 -- --may-exist add-port br-eth1 eth1
 ## 3. neutron openvswitch plugin 시작:
 br-eth1과 br-int간의 bridge 연결을 위한 port를 생성하며 veth로 해당 port를 연결하고 해당 bridge에 기본적인 flow를 추가해 준다.
 
-{% img /images/neutron-nova-network-3.jpg 497 395 %}
+{{< figure src="/images/neutron-nova-network-3.jpg" >}}
 
 ### neutron - br-int setup
 ``` bash
@@ -89,7 +89,7 @@ ip link set phy-br-eth1 up
 ## 4. nova에서 인스턴스 생성:
 nova에서는 qbr bridge를 생성하며 해당 bridge에 qvb port를 생성하고 br-int에 qvo port를 생성하여 두 port를 veth로 연결한다.(xml에 관련해서 여기에서 생성된다.)
 
-{% img /images/neutron-nova-network-4.jpg 497 395 %}
+{{< figure src="/images/neutron-nova-network-4.jpg" >}}
 
 ### nova - instance up
 ``` bash
@@ -112,7 +112,7 @@ ovs-vsctl --timeout=120 -- --if-exists del-port qvo${ovsid} -- add-port br-int q
 ## 5. neutron openvswitch plugin에서 ovsdb-client monitoring을 통한 풀링:
 br-int의 변화를 감지하여 해당 qvo port를 위한 vlan tagging을 해주며 이를 위한 flow를 br-int와 br-eth1에 추가한다.
 
-{% img /images/neutron-nova-network-5.jpg 497 395 %}
+{{< figure src="/images/neutron-nova-network-5.jpg" >}}
 
 ### neutron - instance up
 ``` bash
@@ -125,4 +125,4 @@ ovs-vsctl --timeout=10 set Port qvo${ovsid} tag=${localvlan}
 ## 6. vm 부팅:
 vm이 시작하면서  libvirt의 xml파일안에 정의 되어 있는 qbr bridge에 tap port가 생성되어서 vm까지 네트워크가 완성된다.(이 xml은 이미 4번 단계에서 완성되어 있다.)
 
-{% img /images/neutron-nova-network-6.jpg 497 395 %}
+{{< figure src="/images/neutron-nova-network-6.jpg" >}}

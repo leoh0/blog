@@ -21,35 +21,35 @@ iptables를 좀 보기 편하게 할 수 없는가를 이야기하다가 [여기
 ascii 로 그린 architecture 들이다.
 
 # bridge-vlan
-{% img /images/draw-bridge-vlan.png 1312 544 bridge-vlan %}
+{{< figure src="/images/draw-bridge-vlan.png" >}}
 
 # openvswitch-flat
-{% img /images/draw-ovs-flat.png 2526 780 openvswitch-flat %}
+{{< figure src="/images/draw-ovs-flat.png" >}}
 
 # openvswitch-vlan
-{% img /images/draw-ovs-vlan.png 2752 544 openvswitch-vlan %}
+{{< figure src="/images/draw-ovs-vlan.png" >}}
 
 이걸 graphviz 로 그리면 다음과 같다.
 
 # bridge-vlan
-{% img /images/draw-bridge-vlan-g.png 757 131 bridge-vlan %}
+{{< figure src="/images/draw-bridge-vlan-g.png" >}}
 
 # openvswitch-flat
-{% img /images/draw-ovs-flat-g.png 1101 491 openvswitch-flat %}
+{{< figure src="/images/draw-ovs-flat-g.png" >}}
 
 # openvswitch-vlan
-{% img /images/draw-ovs-vlan-g.png 1594 131 openvswitch-vlan %}
+{{< figure src="/images/draw-ovs-vlan-g.png" >}}
 
 이걸 3D 로 그리면 다음과 같다.
 
 # bridge-vlan
-{% img /images/draw-bridge-vlan-3d.png 2716 1564 bridge-vlan %}
+{{< figure src="/images/draw-bridge-vlan-3d.png" >}}
 
 # openvswitch-flat
-{% img /images/draw-ovs-flat-3d.png 2844 1668 openvswitch-flat %}
+{{< figure src="/images/draw-ovs-flat-3d.png" >}}
 
 # openvswitch-vlan
-{% img /images/draw-ovs-vlan-3d.png 2844 2032 openvswitch-vlan %}
+{{< figure src="/images/draw-ovs-vlan-3d.png" >}}
 
 는 사실 그냥 이전에 그려논 그림이다..
 
@@ -57,4 +57,72 @@ ascii 로 그린 architecture 들이다.
 아래 스크립트를 컴퓨트 노드에서 돌리면 해당 정보를 수집해서 그리게 된다. (물론 네트워크 노드도 가능..)   
 귀찮아서 하드코딩한 부분들은 편하게 고쳐쓰시길..
 
-{% gist 8499b653f479766378d8 %}
+{{< highlight bash "linenos=table" >}}
+#!/bin/bash
+
+sudo apt-get install -qqy ethtool libgraph-easy-perl graphviz > /dev/null
+
+EXCEPT=/tmp/exceptlist
+echo '' > $EXCEPT
+result=""
+
+function on_exit() {
+  rm -f $EXCEPT
+}
+
+trap "on_exit" EXIT
+
+# find ovs br <-> port
+if [ "x$(which ovs-vsctl)" != "x" ]; then
+  for br in $(sudo ovs-vsctl list-br); do
+    for port in $(sudo ovs-vsctl list-ports $br); do
+      result=$(echo "$result [$port]---->[$br] [$br]---->[$port] ")
+    done
+  done
+fi
+
+# find br <-> port
+for br in $(brctl show | sed '1d' | grep '^[a-z]' | awk '{print $1}'); do
+  for port in $(brctl show $br | sed '1d' | sed 's/.*\t.*\t.*\t\(.*\)/\1/g'); do
+    result=$(echo "$result [$port]---->[$br] [$br]---->[$port] ")
+  done
+done
+
+# ip namespace veth
+for ns in $(ip netns); do
+  for interface in $(ip netns exec $ns ip a | cut -d':' -f-2 | grep ^[1-9]); do
+    index=$(ip netns exec $ns ethtool -S $interface 2> /dev/null | grep peer_ifindex | awk '{print $2}')
+    ifname=$(ip netns exec $ns ip a | grep "^$index:" | awk '{print $2}' | cut -d':' -f1)
+    if [ "x$ifname" == "x" ]; then
+      ifname=$(ip a | grep "^$index:" | awk '{print $2}' | cut -d':' -f1)
+      if [ "x$ifname" != "x" ]; then
+        echo $ifname >> $EXCEPT
+        result=$(echo "$result [$interface]---->[$ifname] [$ifname]---->[$interface] ")
+      fi
+    fi
+  done
+done
+
+# ip veth
+for interface in $(ip a | cut -d':' -f-2 | grep ^[1-9]); do
+  if cat $EXCEPT | grep -q "^$interface$" ; then continue ; fi
+  index=$(ethtool -S $interface 2> /dev/null | grep peer_ifindex | awk '{print $2}')
+  ifname=$(ip a | grep "^$index:" | awk '{print $2}' | cut -d':' -f1)
+  if [ "x$ifname" != "x" ]; then
+    echo $ifname >> $EXCEPT
+    result=$(echo "$result [$interface]---->[$ifname] [$ifname]---->[$interface] ")
+  fi
+done
+
+# vm tap
+for tap in $(ip a | cut -d':' -f-2 | grep ^[1-9]  | cut -d' ' -f2 | grep '^tap'); do
+  vmuuid=$(grep -rl "$tap" /var/lib/nova/instances/*/libvirt.xml | cut -d'/' -f6)
+  if [ "x$vmuuid" != "x" ]; then
+    result=$(echo "$result [$tap]---->[VM-$vmuuid] [VM-$vmuuid]---->[$tap] ")
+  fi
+done
+
+rm -f $EXCEPT
+
+echo $result | graph-easy
+echo $result | graph-easy -as dot | dot -Tpng -o l2path.png{{< /highlight >}}

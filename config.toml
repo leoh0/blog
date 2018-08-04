@@ -1,8 +1,7 @@
 baseurl = "https://leoh0.github.io/" # Controls base URL sitewide
-languageCode = "ko-KR" # Controls site language
+languageCode = "en-US" # Controls site language
 title = "> /dev/null" # Homepage title and page title suffix
-paginate = 5 # Number of posts to show before paginating
-toc = true
+paginate = 11 # Number of posts to show before paginating
 
 # Controls default theme and theme components
 theme = [
@@ -11,17 +10,72 @@ theme = [
 ]
 
 enableRobotsTXT = true # Suggested, enable robots.txt file
-googleAnalytics = "" # Optional, add tracking Id for analytics
-disqusShortname = "" # Optional, add Disqus shortname for comments
+googleAnalytics = "UA-46519012-1" # Optional, add tracking Id for analytics
+disqusShortname = "leoh0githubio" # Optional, add Disqus shortname for comments
 SectionPagesMenu = "main" # Enable menu system for lazy bloggers
 footnoteReturnLinkContents = "↩" # Provides a nicer footnote return link
+sectionPagesMenu = "main"
+
+pygmentsstyle = "api"
+
+keywords = [
+  "kubernetes",
+  "openstack",
+  "infrastructure"
+]
+
+[menu]
+
+  [[menu.main]]
+    name = "Home"
+    weight = 1
+    identifier = "home"
+    url = "/"
+
+  [[menu.main]]
+    name = "Posts"
+    weight = 2
+    identifier = "post"
+    url = "/post/"
+
+  [[menu.main]]
+    name = "AboutMe"
+    weight = 3
+    identifier = "about"
+    url = "/about/aboutme"
+
+[related]
+  # Only include matches with rank >= threshold. This is a normalized rank between 0 and 100.
+  threshold = 80
+
+  # To get stable "See also" sections we, by default, exclude newer related pages.
+  includeNewer = false
+
+  # Will lower case keywords in both queries and in the indexes.
+  toLower = false
+
+  [[related.indices]]
+    name = "keywords"
+    weight = 150
+
+  [[related.indices]]
+    name  = "tags"
+    weight = 100
+
+  [[related.indices]]
+    name  = "date"
+    weight = 10
+    pattern = "2006"
 
 [params]
-  description = "" # Suggested, controls default description meta
-  author = "" # Optional, controls author name display on posts
-  hide_author = true # Optional, set true to hide author name on posts
-  show_menu = false # Optional, set true to enable section menu
-  powered_by = true # Optional, set false to disable credits
+  description = "... nothing ..." # Suggested, controls default description meta
+  author = "leoh0" # Optional, controls author name display on posts
+  hide_author = false # Optional, set true to hide author name on posts
+  show_menu = true # Optional, set true to enable section menu
+  powered_by = false # Optional, set false to disable credits
+  related_content_limit = 5
+  toc = true
+
   images = [
     "https://source.unsplash.com/collection/983219/2000x1322"
   ] # Suggested, controls default Open Graph images
@@ -29,8 +83,3 @@ footnoteReturnLinkContents = "↩" # Provides a nicer footnote return link
 [params.modules.fractal_forest]
   enabled = true # Optional, set false to disable module
   decoders = ["bpgdec8a"] # Optional, 8-bit javascript decoder with animation
-
-pygmentsUseClassic            = false
-pygmentsCodeFences            = true
-pygmentsCodeFencesGuessSyntax = true
-pygmentsstyle = "monokai"

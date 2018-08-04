@@ -11,7 +11,7 @@ categories:
 - multiple cluster
 ---
 
-{% img /images/2016-05-10_03-40-27.jpg 368 272 %}
+{{< figure src="/images/2016-05-10_03-40-27.jpg" >}}
 
 ## openstack rc file ##
 여러 openstack 클러스터를 관리하려면 [openstack rc file](http://docs.openstack.org/user-guide/common/cli_set_environment_variables_using_openstack_rc.html)(이하 openrc file)을 잘 관리해야한다.    
@@ -132,7 +132,7 @@ $ cat ~/.pyenv/pyenv.d/exec/openstack.bash
 ```
 
 해당 파일내용은 아래와 같다.
-``` bash
+{{< highlight bash>}}
 openstack_root=$(pwd -P 2>/dev/null || command pwd)
 while [ ! -e "$openstack_root/openrc" ];
 do
@@ -147,7 +147,7 @@ if [ "$openstack_root" != "" ]; then
 
   . "$openstack_root/openrc"
 fi
-```
+{{< /highlight >}}
 
 약간에 설명을 하자면 해당 커맨드를 실행하는 해당 디렉토리에 `openrc` 파일이 있으면 `OS_`로 시작하는 모든 환경 변수를 초기화(unset)하고 openrc 를 export 한다.    
 만약 해당 디렉토리에 해당 파일(openrc)가 없으면 상위 디렉토리가 존재할때까지 recursive 하게 올라간다.
@@ -172,7 +172,7 @@ python -c "import os; print('\n'.join([str(\"%s=%s\" %(i,j)) for i,j in os.envir
 
 아래 스크립트를 이용하면 ubuntu에서 테스트 설치해서 테스트 가능하다.
 
-``` bash install_openrc_changer.sh https://gist.github.com/leoh0/21d61d3bebe394d278e6f18d5465415d link
+{{< highlight bash "linenos=table" >}}
 #!/usr/bin/env bash
 
 sudo apt-get install -qqy git make build-essential libssl-dev zlib1g-dev libbz2-dev \
@@ -213,7 +213,7 @@ OPENRC_CHOOSER
 
 echo 'need relogin'
 exit
-```
+{{< /highlight >}}
 
 ## 결론 ##
 

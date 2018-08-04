@@ -16,7 +16,7 @@ categories:
 - container
 ---
 
-<a href="http://showterm.io/404f651b005c52298bc9f">{% img /images/2016-10-13_00-04-57.jpg 924 533 %}</a>
+{{< figure src="/images/2016-10-13_00-04-57.jpg" >}}
 [클릭해서 과정 보기](http://showterm.io/404f651b005c52298bc9f)
 
 `kubernetes` 로 `openstack mitaka`를 설치해 봤습니다.

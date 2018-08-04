@@ -9,4 +9,4 @@ categories:
 - host
 ---
 
-{% gist 261cc772f9bc5ab916b5 %}
+{{< gist leoh0 261cc772f9bc5ab916b5 >}}

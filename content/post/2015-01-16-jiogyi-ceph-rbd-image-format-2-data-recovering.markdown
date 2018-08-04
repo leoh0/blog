@@ -13,7 +13,7 @@ categories:
 
 ## ceph: pg incomplete is worst nightmare
 
-{% img http://a1.res.cloudinary.com/hqq9ey1mh/image/upload/c_limit,w_793/v1414983220/z3vn1zndif6v7q2u08w1.png 500 500 "2014 open user survey block storage" %}
+{{< figure src="http://a1.res.cloudinary.com/hqq9ey1mh/image/upload/c_limit,w_793/v1414983220/z3vn1zndif6v7q2u08w1.png" title="2014 open user survey block storage" >}}
 
 [2014년 유저 설문조사](http://superuser.openstack.org/articles/openstack-user-survey-insights-november-2014)에서 찾을 수 있듯이 **ceph**은 openstack의 block storage의 de facto standard 라고 말할 수 있다.
 
@@ -40,13 +40,12 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 그러므로 전체 파일중 특정 조각이 문제가 되고 이 파일을 접근하는 모든 client request는 hang이 걸리게 된다.   
 볼륨같은 큰 데이터(많은 조각을 갖는 데이터)는 몇 개의 pg만 `incomplete`로 떨어져도 결국 모든 client의 request가 hang이 걸리게 된다.
 
-{% img /images/ceph.png 1688 264 "ceph logical flow" %}
+{{< figure src="/images/ceph.png" title="ceph logical flow" >}}
 
 그러므로 `incomplete` 된 pg가 있으면 pool 전체를 사용할 수 가 없다.(pool을 초기화 하기 전까지..)   
 왜냐하면 어떠한 rbd object는 rados object로 분할되고 rados object들은 해당 pool에 분할 되어져서 들어간다.   
 해당 pool은 pg 들로 이루어 지는데 그중 한 pg 조각만 문제가 있어도 그 pg 조각에 들어간 한 rados object에 접근이 안되고 그렇기 때문에 rbd object 자체를 쓸수가 없게 되기 때문에 해당 pool을 쓸 수 없게 된다.   
-온갖 메일링 리스트와 구글에서 검색한 방법을 사용했지만 효과는 없었고   
-다음에 이 상태로 빠지지 않을 수 있는 교훈만 얻을 수 있었다.   
+온갖 메일링 리스트와 구글에서 검색한 방법을 사용했지만 효과는 없었고 다음에 이 상태로 빠지지 않을 수 있는 교훈만 얻을 수 있었다.   
 
 이 글을 보면 이게 얼마나 간단하지 않은 일인지 알게 된다..   
 [Ceph PG Incomplete = Cluster unusable](https://www.mail-archive.com/ceph-users@lists.ceph.com/msg15916.html)
@@ -69,7 +68,7 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 
 ### rbd image format 1
 
-``` c ceph/src/include/rbd_types.h https://github.com/ceph/ceph/blob/master/src/include/rbd_types.h#L36-46 link
+{{< highlight c >}}
 /*
  * old-style rbd image 'foo' consists of objects
  *   foo.rbd      - image metadata
@@ -81,11 +80,11 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 #define RBD_SUFFIX	 	".rbd"
 #define RBD_DIRECTORY           "rbd_directory"
 #define RBD_INFO                "rbd_info"
-```
+{{< /highlight >}}
 
 ### rbd image format 2
 
-``` c ceph/src/include/rbd_types.h https://github.com/ceph/ceph/blob/master/src/include/rbd_types.h#L24-34 link
+{{< highlight c >}}
 /* New-style rbd image 'foo' consists of objects
  *   rbd_id.foo              - id of image
  *   rbd_header.<id>         - image metadata
@@ -97,7 +96,7 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 #define RBD_HEADER_PREFIX      "rbd_header."
 #define RBD_DATA_PREFIX        "rbd_data."
 #define RBD_ID_PREFIX          "rbd_id."
-```
+{{< /highlight >}}
 
 우선 이글은 현재 사용중인 `rbd image format 2`의 포맷의 복구 방법에 대해서 설명할 계획이다.
 
@@ -238,7 +237,7 @@ osdmap e53074 pool 'images' (35) object 'rbd_data.b0e882ae8944a.0000000000000134
 아래 python코드는 ceph에서 사용하는 [robert jenkins hash](http://burtleburtle.net/bob/hash/evahash.html) 를 [포팅](http://stackoverflow.com/a/3611698)한 스크립트 이다.   
 물론 rjenkins hash 아니면 linux hash이나 기본이 rjenkins hash 이다.   
 
-``` python rjhash.py https://gist.github.com/leoh0/aac0bb046c49a108c541 link
+{{< highlight python "linenos=table" >}}
 '''Implements a straight Jenkins lookup hash - http://burtleburtle.net/bob/hash/doobs.html
 
 Usage: 
@@ -338,7 +337,7 @@ if __name__ == "__main__":
     myhash = jhash(hashstr)
     myhash2 = myhash % int(sys.argv[2])
     print "%x" % myhash2
-```
+{{< /highlight >}}
 
 즉, 위와 같이 스크립트로 해슁하면 `rbd_data.b0e882ae8944a.0000000000000134` 값이 `67` 임을 찾을 수 있을 것이다.
 35번 pool 임을 알고 있으니 35.67 pg 인것을 확인 가능하다.
@@ -372,7 +371,7 @@ ceph-3 의 `3`은 osd 번호이며
 아래와 같은 스크립트를 참고하면 편하다. 간단하게 파일번호로 offset 계산해서 합치는 스크립트 이다.      
 해당 스크립트는 로컬에 있는 파일리스트를 조회해서 합치는 것임으로 위에서 미리 찾아서 한 폴더로 몰아놓으면 편하다.   
 
-``` bash rbd_restore.sh https://raw.githubusercontent.com/smmoore/ceph/master/rbd_restore.sh link
+{{< highlight sh "linenos=table" >}}
 #!/bin/sh
 #
 # AUTHORS
@@ -446,7 +445,7 @@ for file_name in $(ls -1 ${base}.* 2>/dev/null); do
   seek_loc=$(echo ${file_name} | awk -F_ '{print $1}' | awk -v os=${obj_size} -v rs=${rebuild_block_size} -F. '{print os*strtonum("0x" $NF)/rs}')
   dd conv=notrunc if=${file_name} of=${rbd} seek=${seek_loc} bs=${rebuild_block_size} 2>/dev/null
 done
-```
+{{< /highlight >}}
 
 ### 5. mount 해서 테스트 해보기
 

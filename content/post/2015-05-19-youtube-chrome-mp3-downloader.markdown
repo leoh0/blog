@@ -13,7 +13,7 @@ categories:
 
 그런데 이런 음악을 찾기 귀찮아서 mp3 파일로 다운로드 해두고 싶은일이 생긴다.
 
-{% img /images/unsun-whispers.png 452 239 unsun - whispers %}
+{{< figure src="/images/unsun-whispers.png" title="unsun - whispers" >}}
 
 [UNSUN - Whispers Youtube](https://www.youtube.com/watch?v=LapknbGS7Os)
 
@@ -36,12 +36,11 @@ brew install chrome-cli
 
 그리고 그냥 아래 같은 방법을 쓰면 chrome 에서 열려 있는 유튜브 페이지들을 전부 조회해서 mp3로 다운로드 할 수 있다.
 
-``` bash
+{{< highlight bash>}}
 function yd(){
   for l in $(chrome-cli list tabs | grep YouTube | cut -d '[' -f2- | cut -d':' -f2- | cut -d']' -f1); do
     url=$(chrome-cli info -t $l | grep '^Url: ' | cut -d' ' -f2)
     (cd /want/to/download/mp3; youtube-dl -t --extract-audio --audio-format mp3 $url)
   done
 }
-```
-
+{{< /highlight >}}

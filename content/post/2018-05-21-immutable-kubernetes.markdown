@@ -15,7 +15,7 @@ categories:
 - aws
 ---
 
-<div style="text-align:center"><img align="center" src="/images/lk-k8s.png" alt="linuxkit with kubernetes"></img></div>
+{{< figure src="/images/lk-k8s.png" title="linuxkit with kubernetes" >}}
 
 > ...
 > As a developer and sometimes system administrator, one of the scariest things I ever encounter is a server that’s been running for ages which has seen multiple upgrades of system and application software.
@@ -31,7 +31,7 @@ Link [Trash Your Servers and Burn Your Code: Immutable Infrastructure and Dispos
 
 # linuxkit
 
-![linuxkit](http://www.adelzaalouk.me/assets/linuxkit_post//linuxkit.png)
+{{< figure src="http://www.adelzaalouk.me/assets/linuxkit_post//linuxkit.png" >}}
 FROM [Demystifying Moby: From OCI to Linuxkit](http://www.adelzaalouk.me/2017/moby-linuxkit/)
 
 **[linuxkit](https://github.com/linuxkit/linuxkit)** 은 아주 간단히 말해서 컨테이너를 위한 커스텀 리눅스 배포판을 만들고, 배포하고, 실행하기 위한 툴이다.
@@ -54,7 +54,7 @@ FROM [Demystifying Moby: From OCI to Linuxkit](http://www.adelzaalouk.me/2017/mo
 
 ### kubernetes를 좀 더 쉽게 관리하려면
 
-<div style="text-align:center"><img align="center" src="/images/module_01_cluster.svg" alt="kubernetes"></img></div>
+{{< figure src="/images/module_01_cluster.svg" title="kubernetes" >}}
 
 From [Using Minikube to Create a Cluster
 ](https://kubernetes.io/docs/tutorials/kubernetes-basics/create-cluster/cluster-intro/)
@@ -100,7 +100,7 @@ kubernetes를 관리한다고 생각하면 수많은 오퍼레이션을 생각�
 
 ### 에스칼레이터 발판 같은 kubernetes 노드 관리
 
-<div style="text-align:center"><img align="center" src="http://www.madehow.com/images/hpm_0000_0003_0_img0050.jpg" alt="escalator"></img></div>
+{{< figure src="http://www.madehow.com/images/hpm_0000_0003_0_img0050.jpg" title="escalator" >}}
 
 From [Escalator Background](http://www.madehow.com/Volume-3/Escalator.html)
 
@@ -109,7 +109,7 @@ From [Escalator Background](http://www.madehow.com/Volume-3/Escalator.html)
 
 앞에서 kubernetes upgrade를 통해서 설명하려고 한것도 이와 비슷하게 kubernetes node도 이런 life cycle을 갖게한다고 보면 된다.
 
-<div style="text-align:center"><img align="center" src="/images/swapable.png" alt="linuxkit with kubernetes"></img></div>
+{{< figure src="/images/swapable-w.png" title="swapable nodes" >}}
 
 즉, 에스칼레이터나 캐터필러와 같이 계속 업그레이드, docker version 업데이트등과 같은 작업이나 확장등은 신규 노드를 추가하고 옛날 노드를 삭제한다. 그래서 여기에 사용되는 노드들을 빠르게 추가하고 안전하게 관리하기 위해서 linuxkit과 같은 immutable한 이미지 사용을 고려했다.
 
@@ -204,7 +204,8 @@ cilium은 eBPF를 구동시켜보고 싶은 분들에게는 아주 희망적이�
 
 linuxkit + kubernetes + cilium을 mac에서 테스트한 것 입니다.
 
-[![demo](https://asciinema.org/a/182500.png)](https://asciinema.org/a/182500?autoplay=1)
+
+[{{< figure src="https://asciinema.org/a/182500.png" title="demo" >}}](https://asciinema.org/a/182500?autoplay=1)
 
 
 # 마지막으로

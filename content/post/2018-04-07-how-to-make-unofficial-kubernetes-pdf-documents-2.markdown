@@ -16,7 +16,7 @@ categories:
 - unofficial
 ---
 
-![kubernetes](/images/kubernetes-production-grade-container-orchestration.png)
+{{< figure src="/images/kubernetes-production-grade-container-orchestration.png" title="kubernetes" >}}
 
 ### [download k8s 1.10 pdf](/images/kubernetes-documents-1.10.pdf)
 
@@ -41,7 +41,7 @@ docker run -ti -v $PWD:/out3 k8s-website-to-pdf
 
 우선 전체 dockerfile은 아래와 같다.
 
-```
+{{< highlight dockerfile "linenos=table" >}}
 # 참고 https://github.com/leoh0/k8s-website-to-pdf/blob/master/Dockerfile
 FROM alpine/git as source
 
@@ -86,14 +86,14 @@ VOLUME /out3
 ENTRYPOINT ["sh"]
 
 CMD ["-c", "cp /out2/out.pdf /out3/"]
-```
+{{< /highlight >}}
 
 위의 파일을 크게 2가지로 분류해서 보면 다음과 같다.
 
 우선 아래까지는 이전에도 설명한것과 비슷하게 website repository를 가져와서 필요없는 부분을 적당히 제거하고 jekyll로 빌드하고 빌드할 document의 list를 제작한다.
 
-```
-{% raw %}# 참고 https://github.com/leoh0/k8s-website-to-pdf/blob/master/Dockerfile
+{{< highlight dockerfile "linenos=table" >}}
+# 참고 https://github.com/leoh0/k8s-website-to-pdf/blob/master/Dockerfile
 FROM alpine/git as source
 
 ARG BRANCH=master
@@ -114,8 +114,8 @@ RUN mkdir -p ${TARGET} && chown jekyll.jekyll ${TARGET}
 RUN jekyll build --destination ${TARGET}/_site && cat ${TARGET}/_site/docs/home/index.html ${TARGET}/_site/docs/setup/index.html ${TARGET}/_site/docs/concepts/index.html \
   ${TARGET}/_site/docs/tasks/index.html ${TARGET}/_site/docs/tutorials/index.html | \
   grep 'a class="item"' | grep 'href="/docs' | \
-  uniq | cut -d'"' -f6 > ${TARGET}/_site/list{% endraw %}
-```
+  uniq | cut -d'"' -f6 > ${TARGET}/_site/list
+{{< /highlight >}}
 
 이후엔 각 index.html이 web 기준이므로 로컬 파일 css, js를 참고 할 수 있게 경로 변경하고 wkhtmltopdf 로 pdf 생성한다.
 
@@ -123,7 +123,7 @@ RUN jekyll build --destination ${TARGET}/_site && cat ${TARGET}/_site/docs/home/
 
 이후에 ghostscript를 이용해서 letter size로 모든 pdf를 합친다. 나중에 합친 결과물 pdf를 뽑아내기 위해 커맨드를 세팅한다.
 
-```
+{{< highlight dockerfile "linenos=table" >}}
 FROM madnight/docker-alpine-wkhtmltopdf as pdfs
 
 ARG TARGET=/build
@@ -145,7 +145,7 @@ VOLUME /out3
 ENTRYPOINT ["sh"]
 
 CMD ["-c", "cp /out2/out.pdf /out3/"]
-```
+{{< /highlight >}}
 
 아무튼 이렇게 제작한 pdf는 2016페이지 이고 지난번 보다 200페이지가 증가했다.
 
