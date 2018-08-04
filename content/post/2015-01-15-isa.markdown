@@ -1,0 +1,18 @@
+---
+layout: post
+title: "이사"
+date: 2015-01-15 17:58:18 +0900
+comments: true
+categories: 
+- 잡담
+---
+
+~~**RIP** 20140404 https://leoh0.wordpress.com~~   
+~~**RIP** 20150115 http://leoh0.blogspot.kr~~
+
+제일 처음 wordpress 블로그를 썼을때 다 만족스러웠지만 왠지 구글 검색에 노출되는 시간이 오래 걸리는 기분이 있었다..   
+그래서 blogspot 으로 옮겨 갔으나..   
+하지만 부족한 템플릿과 플러그인..   
+그리고 소스 코드 삽입시 html 코드를 작성해야하는데 이게 너무 지저분해서 맘에 들지 않았다.
+
+그래서 결국 소스 코드를 가장 이쁘게 보여 줄 수 있는 [octopress](octopress.org)로..   
