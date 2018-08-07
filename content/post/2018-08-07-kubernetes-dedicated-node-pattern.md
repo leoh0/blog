@@ -3,7 +3,6 @@ title = "Kubernetes dedicated node pattern for Daemonsets"
 date = 2018-08-07T21:25:37+09:00
 description = "tl;dr label&nodeselector 와 taint&toleration을 같이 걸면 전용노드를 만들 수 있다."
 categories = ["technology"]
-draft = true
 tags = ["kubernetes", "Daemonset", "nodeselector", "taint", "toleration", "dedicated", "node", "pattern"]
 images = [
   "http://leoh0.github.io/images/pattern1.png"
