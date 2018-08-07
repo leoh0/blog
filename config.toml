@@ -14,7 +14,6 @@ googleAnalytics = "UA-46519012-1" # Optional, add tracking Id for analytics
 disqusShortname = "leoh0githubio" # Optional, add Disqus shortname for comments
 SectionPagesMenu = "main" # Enable menu system for lazy bloggers
 footnoteReturnLinkContents = "↩" # Provides a nicer footnote return link
-sectionPagesMenu = "main"
 
 pygmentsstyle = "api"
 
@@ -43,6 +42,12 @@ keywords = [
     weight = 3
     identifier = "about"
     url = "/about/aboutme"
+
+  [[menu.main]]
+    name = "."
+    weight = 100
+    identifier = "blog"
+    url = "/blog/"
 
 [related]
   # Only include matches with rank >= threshold. This is a normalized rank between 0 and 100.
