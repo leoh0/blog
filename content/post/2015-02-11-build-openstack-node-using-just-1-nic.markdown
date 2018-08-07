@@ -3,7 +3,9 @@ layout: post
 title: "NIC 1개로 compute node를 vlan type으로 neutron을 사용하여 구성하기 위한 팁"
 date: 2015-02-11 17:12:39 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - openstack
 - neutron
 - compute-node

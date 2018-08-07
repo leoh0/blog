@@ -3,7 +3,9 @@ layout: post
 title: "custom URL for chef server 12"
 date: 2015-02-24 23:29:19 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - chef
 - chef server 12
 ---

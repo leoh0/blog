@@ -4,6 +4,8 @@ title: "containerize openstack"
 date: 2015-04-24 01:08:16 +0900
 comments: true
 categories:
+- technology
+tags:
 - openstack
 - containerize
 - docker

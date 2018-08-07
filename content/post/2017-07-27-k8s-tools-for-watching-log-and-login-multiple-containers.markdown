@@ -3,7 +3,9 @@ layout: post
 title: "k8s tools for watching log and login to multiple containers"
 date: 2017-07-27 00:58:28 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags: 
 - kubernetes
 - k8s
 - tools

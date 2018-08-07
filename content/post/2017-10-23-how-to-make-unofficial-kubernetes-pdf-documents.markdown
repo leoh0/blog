@@ -3,7 +3,9 @@ layout: post
 title: "how to make unofficial kubernetes pdf documents"
 date: 2017-10-23 21:21:47 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags: 
 - kubernetes
 - k8s
 - document

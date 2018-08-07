@@ -3,7 +3,9 @@ layout: post
 title: "mac에서 ntfs disk에 write 하기"
 date: 2015-11-03 09:38:22 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags: 
 - mac
 - ntfs
 ---

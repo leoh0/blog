@@ -4,6 +4,8 @@ title: "커맨드로 크롬에 떠 있는 유튜브 플레이중인 음악 mp3�
 date: 2015-05-19 09:49:32 +0900
 comments: true
 categories:
+- technology
+tags:
 - brew
 - chrome-cli
 - youtube-dl

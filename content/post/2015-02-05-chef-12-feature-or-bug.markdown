@@ -3,7 +3,9 @@ layout: post
 title: "chef 12: node attribute style problem - feature or bug?"
 date: 2015-02-05 17:21:56 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - chef 12
 - attribute
 - symbol

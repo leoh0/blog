@@ -4,6 +4,8 @@ title: "Mac os x - nslookup, host, dig works with /etc/resolv.conf, but ping, ss
 date: 2016-05-17 02:24:09 +0900
 comments: true
 categories:
+- technology
+tags: 
 - mac
 - dns
 - nslookup

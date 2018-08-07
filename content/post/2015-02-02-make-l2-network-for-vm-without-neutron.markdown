@@ -3,7 +3,9 @@ layout: post
 title: "make l2 network for vm without neutron"
 date: 2015-02-02 09:20:23 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - openstack
 - neutron
 - ovs

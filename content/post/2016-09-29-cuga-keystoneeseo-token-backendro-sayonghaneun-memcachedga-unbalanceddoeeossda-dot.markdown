@@ -3,7 +3,9 @@ layout: post
 title: "추가 - Keystone에서 Token Backend로 사용하는 Memcached가 Unbalanced되었다.."
 date: 2016-09-29 23:30:20 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:  
 - keystone
 - memcached
 - openstack

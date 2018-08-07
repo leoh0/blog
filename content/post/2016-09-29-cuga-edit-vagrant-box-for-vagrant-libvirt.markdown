@@ -3,7 +3,9 @@ layout: post
 title: "추가 - edit vagrant box for vagrant-libvirt"
 date: 2016-09-29 23:39:00 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:  
 - vagrant
 - libvirt
 ---

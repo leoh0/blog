@@ -3,7 +3,9 @@ layout: post
 title: "edit vagrant box for vagrant-libvirt"
 date: 2015-02-24 13:22:36 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - vagrant
 - libvirt
 ---

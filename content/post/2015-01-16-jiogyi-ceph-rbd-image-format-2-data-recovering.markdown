@@ -3,7 +3,9 @@ layout: post
 title: "ceph pg incomplete: rbd image-format 2 data recovery"
 date: 2015-01-16 00:54:53 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - openstack
 - block storage
 - ceph

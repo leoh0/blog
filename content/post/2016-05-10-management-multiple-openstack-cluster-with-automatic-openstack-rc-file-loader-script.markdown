@@ -3,7 +3,9 @@ layout: post
 title: "Management multiple openstack cluster with automatic openstack rc file loader script"
 date: 2016-05-10 01:08:56 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags: 
 - openstack
 - rc
 - openrc

@@ -3,7 +3,9 @@ layout: post
 title: "만약 사용자가 ssh password나 key등을 잃어 버려서 도저히 vm instance에 접속할 수 없을때.."
 date: 2015-03-14 22:00:57 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - openstack
 - nova
 - ssh password lost

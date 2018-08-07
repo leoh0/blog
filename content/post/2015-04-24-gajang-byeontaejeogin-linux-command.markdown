@@ -4,6 +4,8 @@ title: "가장 변태적인 linux command"
 date: 2015-04-24 00:28:38 +0900
 comments: true
 categories:
+- technology
+tags:
 - ip
 ---
 

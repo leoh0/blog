@@ -3,7 +3,9 @@ layout: post
 title: "ping openstack vms in specific host"
 date: 2015-03-31 09:36:44 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags:
 - ping
 - openstack
 - host

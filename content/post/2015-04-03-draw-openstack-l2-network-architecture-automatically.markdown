@@ -4,6 +4,8 @@ title: "draw openstack L2 network architecture automatically"
 date: 2015-04-03 02:29:52 +0900
 comments: true
 categories:
+- technology
+tags:
 - openstack
 - openvswitch
 - bridge

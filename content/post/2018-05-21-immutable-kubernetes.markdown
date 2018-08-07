@@ -3,7 +3,9 @@ layout: post
 title: "immutable kubernetes by linuxkit"
 date: 2018-05-21 00:55:10 +0900
 comments: true
-categories: 
+categories:
+- technology
+tags: 
 - linuxkit
 - docker
 - kubernetes
@@ -13,6 +15,7 @@ categories:
 - calico
 - gcp
 - aws
+
 ---
 
 {{< figure src="/images/lk-k8s.png" title="linuxkit with kubernetes" >}}
@@ -87,11 +90,14 @@ kubernetes를 관리한다고 생각하면 수많은 오퍼레이션을 생각�
 1. `control plane(apiserver, controller manager, scheduler)` upgrade
   	* control plane은 apiserver는 daemonset, controller manager, scheduler는 deployment가 되기 때문에 image 교체정도로 업그레이드가 끝나게 된다.
 
-   <div class='showyourterms'>
-      <div class='command'>kubectl set image ds/kube-apiserver kube-apiserver=gcr.io/google_containers/kube-apiserver-amd64:v1.10.0</div>
-      <div class='command'>kubectl set image deploy/kube-scheduler kube-scheduler=gcr.io/google_containers/kube-scheduler-amd64:v1.10.0</div>
-      <div class='command'>kubectl set image deploy/kube-controller-manager kube-controller-manager=gcr.io/google_containers/kube-controller-manager-amd64:v1.10.0</div>
-  </div>
+    ```
+	kubectl set image ds/kube-apiserver \
+	    kube-apiserver=gcr.io/google_containers/kube-apiserver-amd64:v1.10.0
+	kubectl set image deploy/kube-scheduler \
+	    kube-scheduler=gcr.io/google_containers/kube-scheduler-amd64:v1.10.0
+	kubectl set image deploy/kube-controller-manager \
+	    kube-controller-manager=gcr.io/google_containers/kube-controller-manager-amd64:v1.10.0
+    ```
 
 2. `node agent(kubelet)` upgrade
   	* 일반과 동일
@@ -147,7 +153,145 @@ From [Escalator Background](http://www.madehow.com/Volume-3/Escalator.html)
 3. 해당 bridge의 vm이 nat로 인터넷 연결 할 수 있도록 설정
 4. linuxkit 설치 및 접속할 sshkey 생성
 
-{% gist 6da444d132bb3d9d09eb9ba2793c1f2e %}
+{{< highlight bash "linenos=table" >}}
+#!/bin/sh
+
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+
+set -ex
+
+apt update
+apt install   -y  apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+apt-key fingerprint 0EBFCD88
+#add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+#   $(lsb_release -cs) \
+#   stable"
+# 18.04는 repo가 아직 없어서 artful을 이용해야 한다.
+add-apt-repository    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   artful \
+   stable"
+apt update
+apt install -y docker-ce uml-utilities qemu-kvm bridge-utils virtinst libvirt-bin golang-go
+
+virsh net-destroy default
+virsh net-autostart --disable default
+
+ip link add virbr10-dummy address $(hexdump -vn3 -e '/3 "52:54:00"' -e '/1 ":%02x"' -e '"\n"' /dev/urandom) type dummy
+
+brctl addbr virbr10
+brctl stp virbr10 on
+brctl addif virbr10 virbr10-dummy
+ip address add 10.0.0.1/8 dev virbr10 broadcast 192.168.100.255
+
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+echo "net.ipv4.conf.all.forwarding=1" >> /etc/sysctl.conf
+sysctl -p
+
+iptables -t nat -A POSTROUTING -s 10.0.0.0/8 -d 224.0.0.0/24 -j RETURN
+iptables -t nat -A POSTROUTING -s 10.0.0.0/8 -d 255.255.255.255/32 -j RETURN
+iptables -t nat -A POSTROUTING -s 10.0.0.0/8 ! -d 10.0.0.0/8 -p tcp -j MASQUERADE --to-ports 1024-65535
+iptables -t nat -A POSTROUTING -s 10.0.0.0/8 ! -d 10.0.0.0/8 -p udp -j MASQUERADE --to-ports 1024-65535
+iptables -t nat -A POSTROUTING -s 10.0.0.0/8 ! -d 10.0.0.0/8 -j MASQUERADE
+
+iptables -t filter -A FORWARD -d 10.0.0.0/8 -o virbr10 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+# 밖으로(169.254.0.0/16)으로 메타가 새면 하이퍼바이저의 메타를 들고온다..
+iptables -t filter -A FORWARD -s 10.0.0.0/8 ! -d 169.254.0.0/16 -i virbr10 -j ACCEPT
+iptables -t filter -A FORWARD -s 10.0.0.0/8 -d 169.254.0.0/16 -i virbr10 -j DROP
+
+ip l set virbr10-dummy up
+ip l set virbr10 up
+
+mkdir -p /etc/qemu/
+echo 'allow virbr10' > /etc/qemu/bridge.conf
+mkdir -p /var/lib/dnsmasq/virbr10
+touch /var/lib/dnsmasq/virbr10/hostsfile
+touch /var/lib/dnsmasq/virbr10/leases
+
+cat > /var/lib/dnsmasq/virbr10/dnsmasq.conf << EOF
+# Only bind to the virtual bridge. This avoids conflicts with other running
+# dnsmasq instances.
+except-interface=lo
+interface=virbr10
+bind-dynamic
+
+# If using dnsmasq 2.62 or older, remove "bind-dynamic" and "interface" lines
+# and uncomment these lines instead:
+#bind-interfaces
+listen-address=10.0.0.1
+
+# IPv4 addresses to offer to VMs. This should match the chosen subnet.
+dhcp-range=10.0.0.2,10.15.255.254
+
+# 굳이 안해도 되나 아이피 일괄적으로 주려면 이런게 제일 편하다.
+dhcp-host=8a:a0:33:57:08:0a,10.0.0.2
+dhcp-host=8a:a0:33:57:08:0b,10.0.0.3
+dhcp-host=8a:a0:33:57:08:0c,10.0.0.4
+dhcp-host=8a:a0:33:57:08:0d,10.0.0.5
+dhcp-host=8a:a0:33:57:08:0e,10.0.0.6
+
+# Set this to at least the total number of addresses in DHCP-enabled subnets.
+dhcp-lease-max=1000
+
+# File to write DHCP lease information to.
+dhcp-leasefile=/var/lib/dnsmasq/virbr10/leases
+# File to read DHCP host information from.
+dhcp-hostsfile=/var/lib/dnsmasq/virbr10/hostsfile
+# Avoid problems with old or broken clients.
+dhcp-no-override
+# https://www.redhat.com/archives/libvir-list/2010-March/msg00038.html
+strict-order
+EOF
+
+cat > /etc/systemd/system/dnsmasq@.service << EOF
+# '%i' becomes 'virbr10' when running `systemctl start dnsmasq@virbr10.service`
+# Remember to run `systemctl daemon-reload` after creating or editing this file.
+
+[Unit]
+Description=DHCP and DNS caching server for %i.
+After=network.target
+
+[Service]
+ExecStart=/usr/sbin/dnsmasq -k --conf-file=/var/lib/dnsmasq/%i/dnsmasq.conf
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl start dnsmasq@virbr10.service
+
+echo '''Host *
+    StrictHostKeyChecking no
+    UserKnownHostsFile /dev/null
+    User root''' > /root/.ssh/config
+
+export PATH=~/go/bin:$PATH
+export PATH=/usr/libexec:$PATH
+
+echo '''export PATH=~/go/bin:$PATH
+export PATH=/usr/libexec:$PATH''' >> ~/.bashrc
+
+git clone https://github.com/leoh0/kubernetes
+
+go get -u github.com/linuxkit/linuxkit/src/cmd/linuxkit
+
+echo -e "\n\n\n" | ssh-keygen -t rsa -N ""
+
+echo '''
+# cd /root/kubernetes
+make all
+KUBE_CLEAR_STATE=true KUBE_MAC=8a:a0:33:57:08:0a KUBE_NETWORKING="bridge,virbr10" ./boot.sh
+KUBE_CLEAR_STATE=true KUBE_MAC=8a:a0:33:57:08:0b KUBE_NETWORKING="bridge,virbr10" ./boot.sh 1 \
+    10.0.0.2:6443 --token 3wkfov.fj3ywmkva55nr4p7 --discovery-token-ca-cert-hash \
+    sha256:ee14b16af5775cfa65215cff0f6fe2807d35b23a4a3dd8a72507e93292fcd8f1
+'''
+{{< /highlight >}}
+
 
 이와 같은 설치시 내부 네트워크 조작등 가장 강력하게 테스트를 해볼수 있다.
 다만 큰 메모리에 하이퍼바이저를 구하기가 쉽지 않을 수 있다. 현재로서는 gce에서 요새 [nested-virtualization](https://cloud.google.com/compute/docs/instances/enable-nested-virtualization-vm-instances)
@@ -159,20 +303,27 @@ From [Escalator Background](http://www.madehow.com/Volume-3/Escalator.html)
 
 1. linuxkit에서는 현재 이미지이름과 같은 vm을 생성한다. gcp에서는 호스트네임이 유니크 해야되서 이때문에 node들은 일부러 이미지를 이름을 다르게 해서 올려야 한다. 예를 들어 아래처럼 01 02 03 과 같이 이름을 다르게 써야 한다.
 
-	<div class='showyourterms'>
-	    <div class='command'>linuxkit push gcp -project alproj -bucket linuxkital -img-name cilium-kube-node01 cilium-kube-node.img.tar.gz</div>
-	    <div class='command'>linuxkit run gcp -project alproj -keys 'key.json' -zone asia-east1-c -machine n1-standard-2 -disk 10 cilium-kube-node01</div>
-	    <div class='command'></div>
-	    <div class='command'>linuxkit push gcp -project alproj -bucket linuxkital -img-name cilium-kube-node02 cilium-kube-node.img.tar.gz</div>
-	    <div class='command'>linuxkit run gcp -project alproj -keys 'key.json' -zone asia-east1-c -machine n1-standard-2 -disk 10 cilium-kube-node02</div>
-	</div>
+	```
+	linuxkit push gcp -project alproj -bucket linuxkital \
+	    -img-name cilium-kube-node01 cilium-kube-node.img.tar.gz
+	linuxkit run gcp -project alproj -keys 'key.json' \
+	    -zone asia-east1-c -machine n1-standard-2 -disk 10 cilium-kube-node01
+
+	linuxkit push gcp -project alproj -bucket linuxkital \
+	    -img-name cilium-kube-node02 cilium-kube-node.img.tar.gz
+	linuxkit run gcp -project alproj -keys 'key.json' \
+	    -zone asia-east1-c -machine n1-standard-2 -disk 10 cilium-kube-node02
+	```
 
 2. 생성할때 disk를 추가해 줘야 한다. 이건 문제라기 보단 당연한 건데 gcp, aws들은 이미지를 raw타입을 쓰고 이미지의 사이즈에서 resize([extend](https://github.com/linuxkit/linuxkit/tree/master/pkg/extend) 하지 않으면 디스크 사이즈가 아예 없다고 봐도 된다. 그래서 추가디스크(eg. sdb)로 용량을 확보(eg. docker image가 저장되는 /var/lib 등)해서 사용 할 수 있다.
 
 3. metadata를 linuxkit command로 넣을 수 없다.. 아직 기능부족으로 문제가 된다. 수동으로 `kubeadm join` 커맨드를 돌려서 작동 시킬 수 있다. 하지만 `kubeadm join`커맨드를 돌리면 `/etc/kubernetes/bootstrap-kubelet.conf` 만 생성된다. 원래 kubelet이 떠있으면 이 파일이 생성되면서 자동으로 kubelet이 이파일로 노드 등록을 하게 되나 linuxkit은 kubelet service가 systemd 등과 같은 툴로 실패해도 지속적으로 구동되도록 트라이 하지 못함으로 특정 파일이 생길때까지 wait을 해놓은 상태이다. 그래서 특정 파일을 생성해 줘야 kubelet 서비스가 뜰 수 있다. 이걸 코드로 표현 하면 다음과 같다.
 
 ```
-kubeadm join 10.140.0.2:6443 --ignore-preflight-errors=all --token gitpj4.gtok7zsm3tfrlh64 --discovery-token-ca-cert-hash sha256:773e83472b9809473cde237246227dfc2cd795a5848f127de11b3a5fb6550fb9
+kubeadm join 10.140.0.2:6443 \
+    --ignore-preflight-errors=all \
+    --token gitpj4.gtok7zsm3tfrlh64 \
+    --discovery-token-ca-cert-hash sha256:773e83472b9809473cde237246227dfc2cd795a5848f127de11b3a5fb6550fb9
 touch /etc/kubernetes/kubelet.conf
 ```
 

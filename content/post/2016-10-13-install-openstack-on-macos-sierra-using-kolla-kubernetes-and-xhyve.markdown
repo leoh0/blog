@@ -4,6 +4,8 @@ title: "Install openstack on macos Sierra using kolla-kubernetes with xhyve"
 date: 2016-10-13 00:02:06 +0900
 comments: true
 categories:
+- technology
+tags: 
 - mitaka
 - openstack
 - install openstack
