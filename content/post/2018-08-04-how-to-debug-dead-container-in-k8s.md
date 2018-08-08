@@ -1,9 +1,8 @@
 +++
 title = "How to Debug Dead Container in K8s"
-date = 2018-08-04T23:21:48+09:00
+date = 2018-08-08T04:09:48+09:00
 description = "till CrashLoopBackOff do us part"
 categories = ["technology"]
-draft = true
 tags = ["k8s", "kubernetes", "dead", "CrashLoopBackOff", "container", "debug"]
 images = [
   "https://source.unsplash.com/collection/983219/1600x900"
@@ -12,13 +11,17 @@ images = [
 
 {{< figure src="/images/dead_docker.png" caption="" attr="" attrlink="" >}}
 
+> Bugs happen. That's a fact of life.
+>
+> ["ABSOLUTELY THE MOST IMPORTANT THING IN THE UNIVERSE WHEN IT COMES TO SOFTWARE DEVELOPMENT", linus](https://lkml.org/lkml/2018/8/3/621)
+
+# k8s에서 pod 을 debugging 하는 일반적인 방법들
+
 > Everyone knows that debugging is twice as hard as writing a program in the first place. 
 >
 >  “The Elements of Programming Style”, 2nd edition
 
-# k8s에서 pod 을 debugging 하는 일반적인 방법들
-
-우리는 소프트웨어는 언제나 문제가 생길 수 있다는 것을 알고 있고 많은 문제들을 debugging 을 통해서 해결합니다. container를 debugging 하는 것들은 준비여부(log, debugging tools, ...)가 중요해서 쉽지 않은 경우들이 대부분입니다. 다행히도 container를 debugging 하기 위한 방법들은 이런 필요들에 따라 많은 발전을 했습니다.
+우리는 소프트웨어는 언제나 문제가 생길 수 있다는 것을 알고 있고 많은 문제들을 debugging 을 통해서 해결합니다. container를 debugging 하는 것들은 준비여부(log, debugging tools, ...)가 중요해서 쉽지 않은 경우들이 대부분입니다. 다행히도 container를 debugging 하기 위한 방법들은 많은 발전을 했습니다.
 
 그래서 이 글을 적을 때만 해도 이런 기술셋들 부터 정리 하려고 했는데 아래 글에서 아주 잘 정리해서 이를 대체 해도 될것 같습니다.
 
@@ -28,8 +31,8 @@ images = [
 
 public cloud에서는 아래와 같은 툴들을 지원해서 debugging 을 편하게 할수 있습니다.
 
-* Azure의 dev spaces
-* Google의 stack driver debugger
+* Azure의 [dev spaces](https://docs.microsoft.com/ko-kr/azure/dev-spaces/azure-dev-spaces)
+* Google의 [stackdriver debugger](https://cloud.google.com/debugger/)
 
 원격 디버깅은 squash의 kubernetes 버전을 이용하면 됩니다.
 
@@ -145,7 +148,7 @@ command terminated with exit code 126
 scratch-debugger/debug.sh POD_NAME [POD_NAMESPACE CONTAINER_NAME]
 ```
 
-원리는 단순합니다. 특정 지정된 pod과 같은 node에 pod을 띄우는데 해당 pod이 docker socket을 마운트 해서 docker command를 이용해서 busybox 바이너리를 docker exec로 특정 지정된 pod에 심는 방법입니다. 이 방법을 이용하면 아무런 제약없이 binary를 심을 수 있습니다.
+원리는 단순합니다. 특정 지정된 pod과 같은 node에 pod을 띄우는데 해당 pod이 docker socket을 마운트 해서 docker command를 이용해서 busybox 바이너리를 docker cp로 특정 지정된 pod에 심는 방법입니다. 이 방법을 이용하면 아무런 제약없이 binary를 심을 수 있습니다.
 
 하지만 이 방법도 현재 한계가 있습니다.
 
@@ -154,7 +157,7 @@ scratch-debugger/debug.sh POD_NAME [POD_NAMESPACE CONTAINER_NAME]
 
 #### 죽은 컨테이너를 대상으로 테스트 할 수 없다.
 
-말 그대로 죽은 컨테이너를 대상으로 쓸 수 없습니다. 그래서 다음 챕터에서 이를 극복하는 방법을 소개 합니다.
+말 그대로 죽은 컨테이너를 대상으로 쓸 수 없습니다. 그래서 `커맨드를 항상 성공하는 것으로 교체한다.`에서 이를 극복하는 방법을 소개 합니다.
 
 #### 바이너리 인젝트를 하려면 해당 컨테이너가 바이너리를 바인드 마운트 해야 제대로 접근가능한 경우들이 있다.
 
@@ -388,7 +391,7 @@ if __name__ == '__main__':
 위의 스크립트를 `debugdead.py`라고 준비해서 실행할 수 있게 해두고 아래와 같이 사용합니다.
 
     ```
-    debugdead.py ${name} -n ${namespace} -c ${container} $@;
+    debugdead.py POD_NAME [-n POD_NAMESPACE -c CONTAINER_NAME];
     ```
 
 실제 사용예 입니다. 저는 왠만한 모든 cli에 [fzf](https://github.com/junegunn/fzf) 를 붙여서 UI(item select)로 사용합니다.
@@ -457,7 +460,7 @@ $ kubectl exec -ti debug-heapster-heapster-65489b94b5-2fea7 -n kube-system -c he
 
 살아있는 팟을 디버깅할 수 있는 툴들도 많지만 죽은 이유를 알아내야 할때는 아래 정도로 정리하면 좋을 것 같습니다.
 
-1. log 확인 log가 없으면 log -p 를 사용해서 이전 컨테이너 로그까지 확인
+1. log 확인 log가 없으면 log -p 를 사용해서 이전 컨테이너 로그까지 확인 (없으면 추가적으로 kubelet log, docker log, controller manager log 등도 확인)
 2. describe를 이용해 message, event 등을 보고 파악함
 3. debug tool이 없는 scratch image일 경우 바이너리를 인젝션 시켜서 사용할 수 있도록 함
 4. 커맨드가 지속적으로 실패하는 팟은 팟을 복사해서 커맨드만 교체해서 테스트 할 수 있도록 함
