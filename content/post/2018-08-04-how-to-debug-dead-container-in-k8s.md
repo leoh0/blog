@@ -127,7 +127,7 @@ ENTRYPOINT ["/heapster"]
 이런 container들은 아래와 같이 `sh`도 사용할 수 없습니다.
 
 {{< highlight text >}}
-$ kubectl exec -ti heapster-heapster-65489b94b5-kjlk4 -n kube-system -c heapster sh
+$ kubectl exec -ti heapster-heapster-65489b24b5-kjlk4 -n kube-system -c heapster sh
 OCI runtime exec failed: exec failed: container_linux.go:348: starting container process caused "exec: \"sh\": executable file not found in $PATH": unknown
 command terminated with exit code 126
 {{< /highlight >}}
@@ -165,13 +165,13 @@ scratch-debugger/debug.sh POD_NAME [POD_NAMESPACE CONTAINER_NAME]
 아래와 같이 /tmp/debug-tools/sh를 바로 사용할 수가 없기 때문입니다. 이건 바이너리 인젝트 방법을 바인드 마운트 방법을 쓰지 않아서 어쩔 수 없습니다.
 
 ```
-$ debugk  heapster-heapster-65489b94b5-kjlk4 -n kube-system -c heapster
+$ debugk  heapster-heapster-65489b24b5-kjlk4 -n kube-system -c heapster
 Debug Target Container:
-  Pod:          heapster-heapster-65489b94b5-kjlk4
+  Pod:          heapster-heapster-65489b24b5-kjlk4
   Namespace:    kube-system
-  Node:         kube-node009-nucleo-stg-jp2v-dev
+  Node:         kube-test
   Container:    heapster
-  Container ID: f095214821b2645f53919c4628c6d9d3019ef6c85f7f86bb7ed8d6eb6b7e5cae
+  Container ID: f095214821b2645f43919c4628c6d9d3019ef6c85f7f86bb7ed8d6eb6b7e5cae
   Runtime:      docker
 
   "Installing busybox to /tmp/debug-tools ..."
@@ -185,8 +185,8 @@ waiting for debugger pod to complete (currently Running)...
 waiting for debugger pod to complete (currently Running)...
 pod "debugger-st86p" deleted
 Installation complete.
-To debug heapster-heapster-65489b94b5-kjlk4, run:
-    kubectl --namespace=kube-system exec -i -t heapster-heapster-65489b94b5-kjlk4 -c heapster -- /tmp/debug-tools/sh -c 'PATH=${PATH}:/tmp/debug-tools sh'
+To debug heapster-heapster-65489b24b5-kjlk4, run:
+    kubectl --namespace=kube-system exec -i -t heapster-heapster-65489b24b5-kjlk4 -c heapster -- /tmp/debug-tools/sh -c 'PATH=${PATH}:/tmp/debug-tools sh'
 Dumping you into the pod container now.
 
 OCI runtime exec failed: exec failed: container_linux.go:348: starting container process caused "exec: \"/tmp/debug-tools/sh\": stat /tmp/debug-tools/sh: no such file or directory": unknown
@@ -196,7 +196,7 @@ command terminated with exit code 126
 대신 아래와 같은 방법으로 `/tmp/debug-tools/busybox sh` 와 같은 방법으로 busybox를 바로 호출하는식으로 사용하면 접근이 가능합니다.
 
 ```
-$ kubectl --namespace=kube-system exec -i -t heapster-heapster-65489b94b5-kjlk4 -c heapster -- /tmp/debug-tools/busybox sh
+$ kubectl --namespace=kube-system exec -i -t heapster-heapster-65489b24b5-kjlk4 -c heapster -- /tmp/debug-tools/busybox sh
 / $
 ```
 
@@ -431,22 +431,22 @@ kdd ()
 이후 아래처럼 입력해서 디버깅할 pod을 찾으면 아래처럼 출력됩니다.
 ```
 $ kdd
-To debug heapster-heapster-65489b94b5-kjlk4, wait some second and run:
-    kubectl exec -ti debug-heapster-heapster-65489b94b5-2fea7 -n kube-system -c heapster -- /tmp/mydebug/sh -c "PATH=\$PATH:/tmp/mydebug/ sh"
+To debug heapster-heapster-65489b24b5-kjlk4, wait some second and run:
+    kubectl exec -ti debug-heapster-heapster-65489b24b5-2fea7 -n kube-system -c heapster -- /tmp/mydebug/sh -c "PATH=\$PATH:/tmp/mydebug/ sh"
 
-If you want to run heapster-heapster-65489b94b5-kjlk4 container's command then check below command
-    /heapster --source=kubernetes:https://kubernetes.default --sink=influxdb:http://influxdb-influxdb.kube-system.svc:8086 --store-label=nucleo_app=nucleo.app,nucleo_config=nucleo.config,nucleo_service=nucleo.service
+If you want to run heapster-heapster-65489b24b5-kjlk4 container's command then check below command
+    /heapster --source=kubernetes:https://kubernetes.default --sink=influxdb:http://influxdb-influxdb.kube-system.svc:8086
 
-After finish debugging please delete debugging container:
-    kubectl delete pods debug-heapster-heapster-65489b94b5-2fea7 -n kube-system
+After finish debuggin4 please delete debugging container:
+    kubectl delete pods debug-heapster-heapster-65489b24b5-2fea7 -n kube-system
 ```
 
 우선은 잠깐 생성이 안됐을때는 아래처럼 실패할겁니다.
 debugging pod이 뜰 수 있도록 조금 기다려 준 후에 접근 합니다.
 ```
-$ kubectl exec -ti debug-heapster-heapster-65489b94b5-2fea7 -n kube-system -c heapster -- /tmp/mydebug/sh -c "PATH=\$PATH:/tmp/mydebug/ sh"
+$ kubectl exec -ti debug-heapster-heapster-65489b24b5-2fea7 -n kube-system -c heapster -- /tmp/mydebug/sh -c "PATH=\$PATH:/tmp/mydebug/ sh"
 error: unable to upgrade connection: container not found ("heapster")
-$ kubectl exec -ti debug-heapster-heapster-65489b94b5-2fea7 -n kube-system -c heapster -- /tmp/mydebug/sh -c "PATH=\$PATH:/tmp/mydebug/ sh"
+$ kubectl exec -ti debug-heapster-heapster-65489b24b5-2fea7 -n kube-system -c heapster -- /tmp/mydebug/sh -c "PATH=\$PATH:/tmp/mydebug/ sh"
 / $
 ```
 
