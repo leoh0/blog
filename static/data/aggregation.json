@@ -1,0 +1,246 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 23,
+  "iteration": 1539023035220,
+  "links": [],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fill": 1,
+      "gridPos": {
+        "h": 17,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "max(\n  max(\n    kube_replicaset_owner{namespace=\"$ns\",owner_kind=\"$kind\",owner_name=\"$on\"}\n  ) by (namespace, owner_name, owner_kind, replicaset)\n  *\n  on(replicaset, namespace)\n  group_right(owner_name, owner_kind)\n  label_replace(\n    max(\n      kube_pod_owner{namespace=\"$ns\",owner_kind=\"ReplicaSet\"}\n    ) by (owner_name, pod, namespace)\n    , \"replicaset\", \"$1\", \"owner_name\", \"(.+)\"\n  )\n  or\n  kube_pod_owner{namespace=\"$ns\",owner_kind=\"$kind\",owner_name=\"$on\"}\n) by (owner_name, owner_kind, pod, namespace)\n*\non(pod, namespace)\ngroup_right(owner_kind, owner_name)\nlabel_replace(\n  sum by(pod_name, namespace, kubernetes_io_hostname) (\n    rate(container_cpu_usage_seconds_total{namespace=\"$ns\"}[$__interval])\n  ), \"pod\", \"$1\", \"pod_name\", \"(.+)\"\n)\n",
+          "format": "time_series",
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "interval": "15s",
+          "intervalFactor": 5,
+          "legendFormat": "{{ pod_name }} / {{ kubernetes_io_hostname }}",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "expr": "avg(\n  max(\n    max(\n      kube_replicaset_owner{namespace=\"$ns\",owner_kind=\"$kind\",owner_name=\"$on\"}\n    ) by (namespace, owner_name, owner_kind, replicaset)\n    *\n    on(replicaset, namespace)\n    group_right(owner_name, owner_kind)\n    label_replace(\n      max(\n        kube_pod_owner{namespace=\"$ns\",owner_kind=\"ReplicaSet\"}\n      ) by (owner_name, pod, namespace)\n      , \"replicaset\", \"$1\", \"owner_name\", \"(.+)\"\n    )\n    or\n    kube_pod_owner{namespace=\"$ns\",owner_kind=\"$kind\",owner_name=\"$on\"}\n  ) by (owner_name, owner_kind, pod, namespace)\n  *\n  on(pod, namespace)\n  group_right(owner_kind, owner_name)\n  label_replace(\n    sum by(pod_name, namespace, kubernetes_io_hostname) (\n      rate(container_cpu_usage_seconds_total{namespace=\"$ns\"}[$__interval])\n    ), \"pod\", \"$1\", \"pod_name\", \"(.+)\"\n  )\n) by (owner_name, owner_kind, namespace)",
+          "format": "time_series",
+          "interval": "15s",
+          "intervalFactor": 5,
+          "legendFormat": "{{ owner_name }} AVG",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "CPU $ns $kind $on",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "schemaVersion": 16,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "datasource": "prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "ns",
+        "query": "query_result(max(   max(     kube_replicaset_owner   ) by (namespace, owner_name, owner_kind, replicaset)   *   on(replicaset, namespace)   group_right(owner_name, owner_kind)   label_replace(     max(       kube_pod_owner{owner_kind=\"ReplicaSet\"}     ) by (owner_name, pod, namespace)     , \"replicaset\", \"$1\", \"owner_name\", \"(.+)\"   )   or   kube_pod_owner{owner_kind!=\"ReplicaSet\",owner_name!=\"<none>\"}   or   label_replace(     label_replace(       max(         kube_pod_owner{owner_kind!=\"ReplicaSet\",owner_name=\"<none>\"}       ) by (owner_kind, owner_name, pod, namespace)       , \"owner_name\", \"$1\", \"pod\", \"(.+)\"     )     , \"owner_kind\", \"Pod\", \"owner_kind\", \"<none>\"   ) ) by (owner_name, owner_kind, pod, namespace))",
+        "refresh": 1,
+        "regex": "^{namespace=\"(.+?)\",.*$",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "datasource": "prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "kind",
+        "query": "query_result(max(   max(     kube_replicaset_owner{namespace=\"$ns\"}   ) by (namespace, owner_name, owner_kind, replicaset)   *   on(replicaset, namespace)   group_right(owner_name, owner_kind)   label_replace(     max(       kube_pod_owner{namespace=\"$ns\",owner_kind=\"ReplicaSet\"}     ) by (owner_name, pod, namespace)     , \"replicaset\", \"$1\", \"owner_name\", \"(.+)\"   )   or   kube_pod_owner{namespace=\"$ns\"} ) by (owner_name, owner_kind, pod, namespace))",
+        "refresh": 1,
+        "regex": "^.*owner_kind=\"(.+?)\",.*$",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "datasource": "prometheus",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "on",
+        "query": "query_result(max(   max(     kube_replicaset_owner{namespace=\"$ns\",owner_kind=\"$kind\"}   ) by (namespace, owner_name, owner_kind, replicaset)   *   on(replicaset, namespace)   group_right(owner_name, owner_kind)   label_replace(     max(       kube_pod_owner{namespace=\"$ns\",owner_kind=\"ReplicaSet\"}     ) by (owner_name, pod, namespace)     , \"replicaset\", \"$1\", \"owner_name\", \"(.+)\"   )   or   kube_pod_owner{namespace=\"$ns\",owner_kind=\"$kind\"} ) by (owner_name, owner_kind, pod, namespace))",
+        "refresh": 1,
+        "regex": "^.*owner_name=\"(.+?)\",.*$",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Aggregation",
+  "version": 1
+}
