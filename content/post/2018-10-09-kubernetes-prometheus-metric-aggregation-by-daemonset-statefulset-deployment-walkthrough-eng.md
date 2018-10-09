@@ -1,13 +1,13 @@
 +++
-title = "Kubernetes Prometheus Metric Aggregation by Daemonset, Statefulset, Deployment Walkthrough"
-date = 2018-10-09T01:42:33+09:00
+title = "Kubernetes Prometheus Metric Aggregation by Daemonset, Statefulset, Deployment Walkthrough - Eng"
+date = 2018-10-09T22:41:23+09:00
 description = "Big Fantastic PromQL"
-draft = false
+draft = true
 toc = false
 categories = ["technology"]
 tags = ["k8s", "kubernetes", "prometheus", "promql", "metric", "aggregation", "daemonset", "statefulset", "deployment", "walkthrough"]
 images = [
-  "http://leoh0.github.io/images/Grafana%20-%20Aggregation%202018-10-09%2003-57-21.png"
+  "http://leoh0.github.io/images/Grafana - Aggregation 2018-10-09 03-57-21.png"
 ] # overrides the site-wide open graph image
 +++
 
@@ -15,18 +15,18 @@ images = [
 
 # kubernetes and prometheus
 
-최근 kubernetes에서 metric을 관리하는 것중 가장 유명한 것은 `prometheus`라고 할 수 있습니다. metric 관리방법으로 `heapster`를 사용할때 까지는 influxdb를 많이 사용하는 추세 였으나 앞으로 대채될 `metrics-server`는 [현재 in-memory sink밖에 없어서](https://github.com/kubernetes-incubator/metrics-server/issues/66) 우선 기존에 influxdb를 사용하던것을 많이 안쓰게 될것 같습니다. 더욱이 [custom metric들에 대한 예제들이 prometheus로 제공](https://github.com/DirectXMan12/k8s-prometheus-adapter)되고 있어서 prometheus로 metric관리가 통합될것으로 기대하고 있습니다.
+`Prometheus` is most popular monitoring solution for kubernetes. Until the `heapster` was used as a metric management method in kubernetes, influxdb was also used a lot for sink metric data, but the `metrics-server` that is going to be used in the future instead of heapster support currently only an [in-memory sink]((https://github.com/kubernetes-incubator/metrics-server/issues/66)). In addition, examples of [custom metrics are provided in prometheus]((https://github.com/DirectXMan12/k8s-prometheus-adapter)), which expects prometheus to integrate metric management.
 
-이러한 prometheus로 kubernetes metric들을 수집하는 것은 대체로 크게 2가지 케이스 입니다.
+Collecting kubernetes metrics with prometheus is usually below two cases.
 
-1. application 들의 metric 수집
-2. container 단위 metric 수집
+1. Metric collection of applications
+2. Metric collection of container
 
-오늘 이야기하고자 하는 주제는 2번과 같이 단위 container들로 수집된 metric들을 kubernetes 안에 pod들로 모아주고 이 pod들의 metric을 aggregation 하여 `daemonset`, `replicaset`, `deployment`, `statefulset` 과 같은 단위로 데이터를 보여줄 수 있도록 하기 위한 방법입니다.
+The topic we are going to talk about today is to gather metrics from unit containers(like case 2) into pods and aggregate the metrics of these pods into units such as `daemonset`,` replicaset`, `deployment`, and` statefulset`.
 
-## grafana dashboard를 통해 살펴보는 기존 방법들
+## Looking at the existing methods through the grafana dashboard
 
-실제 grafana dashboard들을 참고하면 마땅히 위와 같은 방식으로 aggregation한 대쉬보드를 많이 찾을 수가 없을 것입니다. 아래는 grafana dashboard 중에서 kubernetes와 관련된 그래프들을 중 다운로드 수가 높은 순으로 정렬해봤습니다. 이중 높은 순위 10개가 아래와 같습니다.
+If you refer to actual [grafana dashboards](https://grafana.com/dashboards), you will not find many dashboards aggregated for `daemonset`,` replicaset`, `deployment`, and` statefulset`. Below I have sorted the dashboards related to kubernetes among the grafana dashboard in descending order of downloads. Here are 10 high rankings:
 
 {{< highlight bash >}}
 $ (echo -e "Download@Link@Name" ; \
@@ -46,34 +46,37 @@ Download  Link                                 Name
 29231     https://grafana.com/dashboards/1621  Kubernetes cluster monitoring (via Prometheus)
 {{< /highlight >}}
 
-이런 데이터를 몇개 보시면 알겠지만 대부분 node 혹은 pod의 이름으로만 검색해서 보도록 되어 있습니다.
+As you can see from some of these dashboards, most of them are only search by name of node or pod.
 
-예를 들어 아래와 같이 node와 pod 이름으로 검색해서 보던가
+For example, try searching by node and pod name as shown below:
+
 [{{< figure src="/images/Grafana - Kubernetes Pod Metrics 2018-10-08 23-13-12.png" caption="Kubernetes Pod Metrics" attr="" attrlink="" >}}](https://grafana.com/dashboards/747)
 
-혹은 아래와 같이 node를 선택하고 그 안에서 pod들을 보도록 되어 있습니다.
+Alternatively, you can select the node as shown below and see the pods in it.
+
 [{{< figure src="/images/Grafana - Kubernetes cluster monitoring (via Prometheus) 2018-10-08 23-10-43.png" caption="Kubernetes cluster monitoring (via Prometheus)" attr="" attrlink="" >}}](https://grafana.com/dashboards/1621)
 
-하지만 실제 우리가 kubernetes를 운영하다보면 kubernetes안의 object중 `daemonset`, `statefulset`, `deployment` 와 같은 단위로 선택해서 보고 싶은 경우들이 생기기에 이런 dashboard 만으로 부족하다는걸 알 수 있습니다.
+However, when we operate kubernetes, we can see that the dashboard is not enough because there are some cases in kubernetes that we want to select in the units such as `daemonset`,` statefulset`, and `deployment`.
 
-## string partial match를 이용한 방법들
+## Methods using pod name partial matches
 
-이런 경우 일반적으로 현재까지는 container이름들의 앞부분이 일치하는 것을 이용하여 이런 것을 `string partial match` 하여 해당 pod이 해당 deployment 들에 포함되는 것을 알아내는 식으로 구현 했습니다.
+In this case, we usually use a match of the first part of the container names to find out that the pod is included in the corresponding deployments, daemonset by `string partial match`.
 
-예를 들면 `calico-node` daemonset의 pod 이름들은 `calico-node-xxxxx`의 패턴이기 때문에 `calico-node-.*` 와 같은 regrex로 match를 유도하는 것입니다. 예를 들면 아래와 같습니다.
+For example, the pod names of the `calico-node` daemonset are patterns of` calico-node-xxxxx`, so they are derived with regrex like `calico-node-.*`. For example is like below:
 
 ```
 rate(container_cpu_usage_seconds_total{namespace="$namespace",pod_name=~"$daemonset.*"}[1m])
 ```
 
-실제 dashboard 들은 아래와 같은 것들을 참고해보면 이런 방식으로 많이 구현함을 알 수 있습니다.
+Many dashboards show a lot of implementations in this way if you look at the following:
+
 [Kubernetes StatefulSets (Prometheus)](https://grafana.com/dashboards/5330)
 
-하지만 이런 방법들은 정확하지 않고 좀 더 확실한 방법이 없나 찾게 됩니다. 왜냐하면 예를들어 만약 `calico-node-test` 와 같이 앞부분이 일치하는 다른 daemonset이 있다면 저런 regrex로 match 시키기 어려워 지기 때문입니다.
+However, these methods are not accurate. This is because, for example, if there is another daemonset matching the first part, such as `calico-node-test`, it is difficult to match with regrex.
 
-## label의 partial match를 이용한 방법들
+## Methods using partial matches of labels
 
-아래 링크들과 같이 pod들의 label이 부분 일치하는것들을 이용해서 방법론들이 있었습니다. 이런 aggregation 하는 글들을 적용하면 정확한 pod을 찾아내기 위해서는 label을 열심히 준비해야 하는등 실제 상황에서는 좀 쓰기 불편한것들을이 있었습니다.
+There were ways to use pods whose label matches the partial matches, as shown in the links below. There are some things that are not easy to write in real situations, such as having to prepare labels to find the correct pod using these methods.
 
 [Kubernetes PromQL (Prometheus Query Language) CPU aggregation walkthrough](https://medium.com/@amimahloof/kubernetes-promql-prometheus-cpu-aggregation-walkthrough-2c6fd2f941eb)
 
