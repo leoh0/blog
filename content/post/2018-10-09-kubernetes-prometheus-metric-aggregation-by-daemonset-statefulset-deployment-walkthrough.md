@@ -2,7 +2,7 @@
 title = "Kubernetes Prometheus Metric Aggregation by Daemonset, Statefulset, Deployment Walkthrough"
 date = 2018-10-09T01:42:33+09:00
 description = "Big Fantastic PromQL"
-draft = true
+draft = false
 toc = false
 categories = ["technology"]
 tags = ["k8s", "kubernetes", "prometheus", "promql", "metric", "aggregation", "daemonset", "statefulset", "deployment", "walkthrough"]
