@@ -73,7 +73,7 @@ rate(container_cpu_usage_seconds_total{namespace="$namespace",pod_name=~"$daemon
 
 ## label의 partial match를 이용한 방법들
 
-아래 링크들과 같이 pod들의 label이 부분 일치하는것들을 이용해서 방법론들이 있었습니다. 이런 aggregation 하는 글들을 적용하면 정확한 pod을 찾아내기 위해서는 label을 열심히 준비해야 하는등 실제 상황에서는 좀 쓰기 불편한것들을이 있었습니다.
+아래 링크들과 같이 pod들의 label이 부분 일치하는것들을 이용해서 방법론들이 있었습니다. 이런 aggregation 하는 글들을 적용하면 정확한 pod을 찾아내기 위해서는 label을 열심히 준비해야 하는등 실제 상황에서는 좀 쓰기 불편한것들이 있었습니다.
 
 [Kubernetes PromQL (Prometheus Query Language) CPU aggregation walkthrough](https://medium.com/@amimahloof/kubernetes-promql-prometheus-cpu-aggregation-walkthrough-2c6fd2f941eb)
 
