@@ -28,7 +28,7 @@ The topic we are going to talk about today is to gather metrics from unit contai
 
 If you refer to actual [grafana dashboards](https://grafana.com/dashboards), you will not find many dashboards aggregated for `daemonset`,` replicaset`, `deployment`, and` statefulset`. Below I have sorted the dashboards related to kubernetes among the grafana dashboard in descending order of downloads. Here are 10 high rankings:
 
-{{< highlight bash >}}
+```bash
 $ (echo -e "Download@Link@Name" ; \
    curl -s 'https://grafana.com/api/dashboards?orderBy=name&includeLogo=1&page=1&pageSize=100000&filter=kubernetes' | \
    jq -cr '.items | sort_by(.downloads)[] | ((.downloads | tostring) + "@https://grafana.com/dashboards/" + (.id | tostring) + "@" + (.name))' | tail -n10) | \
@@ -44,7 +44,7 @@ Download  Link                                 Name
 10884     https://grafana.com/dashboards/315   Kubernetes cluster monitoring (via Prometheus)
 12866     https://grafana.com/dashboards/6663  Kubernetes pod and cluster monitoring (via Prometheus)
 29231     https://grafana.com/dashboards/1621  Kubernetes cluster monitoring (via Prometheus)
-{{< /highlight >}}
+```
 
 As you can see from some of these dashboards, most of them are only search by name of node or pod.
 
@@ -170,7 +170,7 @@ kubernetes안에서 pod은 그냥 생성 할 수도 있지만 대부분은 owner
 
 예를 들면 아래와 같이 `metadata.ownerReferences` 를 참고하시면 이게 해당 pod이 어떤 object(daemonset, statefulset, deployment)에 속해 있는지 알 수 있습니다. 예를 들면 이걸 기준으로 아래와 같이 `calico-node` 라는 `daemonset`은 아래의 pod을 가지고(관리하고) 있다고 알 수 있고 우리는 이런 기준으로 aggregation 가능함을 알게 됩니다.
 
-{{< highlight yaml >}}
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -184,7 +184,7 @@ metadata:
 spec:
   containers:
 ...
-{{< /highlight >}}
+```
 
 즉, 이런 ownerReferences를 갖는 pod들은 모두 해당 daemonset에 포함됨으로 이런 ownerReferences를 갖는 pod들을 aggregation하게 되면 그것이 이 daemonset의 데이터가 됨을 알 수 있습니다.
 

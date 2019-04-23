@@ -62,12 +62,12 @@ k8s에서는 아래와 같은 기능들을 활용할 수 있습니다.
 `CrashLoopBackOff`가 되면 pod은 지속적으로 `start` -> `crash` -> `start` -> `crash`를 반복하게 됩니다.
 
 예를 들면 아래 같이 지속적으로 계속 리스타트 되고 있는 팟들은 디버깅 하다보면 계속 리스타트 되서 테스트를 하기 힘듭니다.
-{{< highlight text >}}
+```text
 $ kubectl get pod --all-namespaces | grep -v Running
 NAMESPACE  NAME                         READY   STATUS             RESTARTS   AGE
 test       my-very-important-pod-pgzgb  0/1     CrashLoopBackOff   6761       17d
 ...
-{{< /highlight >}}
+```
 
 그리고 CrashLoopBackOff의 원인은 아주 여러가지기 때문에 user들이 자신의 pod이 CrashLoopBackOff 이 되어서 구글에 검색해봐도 답은 다음과 같습니다.
 
@@ -113,7 +113,7 @@ test       my-very-important-pod-pgzgb  0/1     CrashLoopBackOff   6761       17
 
 예를 들면 아래는 heapster의 이미지 입니다. 보다시피 `scratch`로 되어 있어 아무런 툴들이 없습니다.
 
-{{< highlight dockerfile>}}
+```dockerfile
 FROM scratch
 
 COPY heapster eventer /
@@ -122,15 +122,15 @@ COPY ca-certificates.crt /etc/ssl/certs/
 #   nobody:nobody
 USER 65534:65534
 ENTRYPOINT ["/heapster"]
-{{< /highlight >}}
+```
 
 이런 container들은 아래와 같이 `sh`도 사용할 수 없습니다.
 
-{{< highlight text >}}
+```text
 $ kubectl exec -ti heapster-heapster-65489b24b5-kjlk4 -n kube-system -c heapster sh
 OCI runtime exec failed: exec failed: container_linux.go:348: starting container process caused "exec: \"sh\": executable file not found in $PATH": unknown
 command terminated with exit code 126
-{{< /highlight >}}
+```
 
 결국 2가지를 해결해야 합니다.
 
@@ -232,7 +232,7 @@ $ kubectl --namespace=kube-system exec -i -t heapster-heapster-65489b24b5-kjlk4 
 
 자세한 코드는 아래와 같습니다. 이 코드를 실행가능한 곳에 `debugdead.py` 와 같이 저장해 둡니다.
 
-{{< highlight python >}}
+```python
 #!/usr/bin/env python
 
 import argparse
@@ -386,7 +386,7 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-{{< /highlight >}}
+```
 
 위의 스크립트를 `debugdead.py`라고 준비해서 실행할 수 있게 해두고 아래와 같이 사용합니다.
 
@@ -400,7 +400,7 @@ if __name__ == '__main__':
 이 후 그 결과값을 위의 스크립트에 전달해서 사용합니다.
 
 
-{{< highlight bash>}}
+```bash
 kdd ()
 {
     pods=$(kubectl get pods --all-namespaces -o=go-template='
@@ -426,7 +426,7 @@ kdd ()
         debugdead.py ${name} -n ${namespace} -c ${container} $@;
     fi
 }
-{{< /highlight >}}
+```
 
 이후 아래처럼 입력해서 디버깅할 pod을 찾으면 아래처럼 출력됩니다.
 ```

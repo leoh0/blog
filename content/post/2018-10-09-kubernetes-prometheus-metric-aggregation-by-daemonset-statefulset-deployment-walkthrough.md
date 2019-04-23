@@ -28,7 +28,7 @@ images = [
 
 실제 grafana dashboard들을 참고하면 마땅히 위와 같은 방식으로 aggregation한 대쉬보드를 많이 찾을 수가 없을 것입니다. 아래는 grafana dashboard 중에서 kubernetes와 관련된 그래프들을 중 다운로드 수가 높은 순으로 정렬해봤습니다. 이중 높은 순위 10개가 아래와 같습니다.
 
-{{< highlight bash >}}
+```bash
 $ (echo -e "Download@Link@Name" ; \
    curl -s 'https://grafana.com/api/dashboards?orderBy=name&includeLogo=1&page=1&pageSize=100000&filter=kubernetes' | \
    jq -cr '.items | sort_by(.downloads)[] | ((.downloads | tostring) + "@https://grafana.com/dashboards/" + (.id | tostring) + "@" + (.name))' | tail -n10) | \
@@ -44,7 +44,7 @@ Download  Link                                 Name
 10884     https://grafana.com/dashboards/315   Kubernetes cluster monitoring (via Prometheus)
 12866     https://grafana.com/dashboards/6663  Kubernetes pod and cluster monitoring (via Prometheus)
 29231     https://grafana.com/dashboards/1621  Kubernetes cluster monitoring (via Prometheus)
-{{< /highlight >}}
+```
 
 이런 데이터를 몇개 보시면 알겠지만 대부분 node 혹은 pod의 이름으로만 검색해서 보도록 되어 있습니다.
 
@@ -167,7 +167,7 @@ kubernetes안에서 pod은 그냥 생성 할 수도 있지만 대부분은 owner
 
 예를 들면 아래와 같이 `metadata.ownerReferences` 를 참고하시면 이게 해당 pod이 어떤 object(daemonset, statefulset, deployment)에 속해 있는지 알 수 있습니다. 예를 들면 이걸 기준으로 아래와 같이 `calico-node` 라는 `daemonset`은 아래의 pod을 가지고(관리하고) 있다고 알 수 있고 우리는 이런 기준으로 aggregation 가능함을 알게 됩니다.
 
-{{< highlight yaml >}}
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -181,7 +181,7 @@ metadata:
 spec:
   containers:
 ...
-{{< /highlight >}}
+```
 
 즉, 이런 ownerReferences를 갖는 pod들은 모두 해당 daemonset에 포함됨으로 이런 ownerReferences를 갖는 pod들을 aggregation하게 되면 그것이 이 daemonset의 데이터가 됨을 알 수 있습니다.
 

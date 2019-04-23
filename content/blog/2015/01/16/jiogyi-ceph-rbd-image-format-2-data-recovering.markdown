@@ -70,7 +70,7 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 
 ### rbd image format 1
 
-{{< highlight c >}}
+```c
 /*
  * old-style rbd image 'foo' consists of objects
  *   foo.rbd      - image metadata
@@ -82,11 +82,11 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 #define RBD_SUFFIX	 	".rbd"
 #define RBD_DIRECTORY           "rbd_directory"
 #define RBD_INFO                "rbd_info"
-{{< /highlight >}}
+```
 
 ### rbd image format 2
 
-{{< highlight c >}}
+```c
 /* New-style rbd image 'foo' consists of objects
  *   rbd_id.foo              - id of image
  *   rbd_header.<id>         - image metadata
@@ -98,7 +98,7 @@ ceph을 사용한지 조금 되었지만 큰 문제가 한번도 없어서 일�
 #define RBD_HEADER_PREFIX      "rbd_header."
 #define RBD_DATA_PREFIX        "rbd_data."
 #define RBD_ID_PREFIX          "rbd_id."
-{{< /highlight >}}
+```
 
 우선 이글은 현재 사용중인 `rbd image format 2`의 포맷의 복구 방법에 대해서 설명할 계획이다.
 
@@ -239,7 +239,7 @@ osdmap e53074 pool 'images' (35) object 'rbd_data.b0e882ae8944a.0000000000000134
 아래 python코드는 ceph에서 사용하는 [robert jenkins hash](http://burtleburtle.net/bob/hash/evahash.html) 를 [포팅](http://stackoverflow.com/a/3611698)한 스크립트 이다.   
 물론 rjenkins hash 아니면 linux hash이나 기본이 rjenkins hash 이다.   
 
-{{< highlight python "linenos=table" >}}
+```python
 '''Implements a straight Jenkins lookup hash - http://burtleburtle.net/bob/hash/doobs.html
 
 Usage: 
@@ -339,7 +339,7 @@ if __name__ == "__main__":
     myhash = jhash(hashstr)
     myhash2 = myhash % int(sys.argv[2])
     print "%x" % myhash2
-{{< /highlight >}}
+```
 
 즉, 위와 같이 스크립트로 해슁하면 `rbd_data.b0e882ae8944a.0000000000000134` 값이 `67` 임을 찾을 수 있을 것이다.
 35번 pool 임을 알고 있으니 35.67 pg 인것을 확인 가능하다.
@@ -373,7 +373,7 @@ ceph-3 의 `3`은 osd 번호이며
 아래와 같은 스크립트를 참고하면 편하다. 간단하게 파일번호로 offset 계산해서 합치는 스크립트 이다.      
 해당 스크립트는 로컬에 있는 파일리스트를 조회해서 합치는 것임으로 위에서 미리 찾아서 한 폴더로 몰아놓으면 편하다.   
 
-{{< highlight sh "linenos=table" >}}
+```bash
 #!/bin/sh
 #
 # AUTHORS
@@ -447,7 +447,7 @@ for file_name in $(ls -1 ${base}.* 2>/dev/null); do
   seek_loc=$(echo ${file_name} | awk -F_ '{print $1}' | awk -v os=${obj_size} -v rs=${rebuild_block_size} -F. '{print os*strtonum("0x" $NF)/rs}')
   dd conv=notrunc if=${file_name} of=${rbd} seek=${seek_loc} bs=${rebuild_block_size} 2>/dev/null
 done
-{{< /highlight >}}
+```
 
 ### 5. mount 해서 테스트 해보기
 

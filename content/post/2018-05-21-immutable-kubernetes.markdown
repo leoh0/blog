@@ -153,7 +153,7 @@ From [Escalator Background](http://www.madehow.com/Volume-3/Escalator.html)
 3. 해당 bridge의 vm이 nat로 인터넷 연결 할 수 있도록 설정
 4. linuxkit 설치 및 접속할 sshkey 생성
 
-{{< highlight bash "linenos=table" >}}
+```bash
 #!/bin/sh
 
 if [ "$(id -u)" != "0" ]; then
@@ -290,7 +290,7 @@ KUBE_CLEAR_STATE=true KUBE_MAC=8a:a0:33:57:08:0b KUBE_NETWORKING="bridge,virbr10
     10.0.0.2:6443 --token 3wkfov.fj3ywmkva55nr4p7 --discovery-token-ca-cert-hash \
     sha256:ee14b16af5775cfa65215cff0f6fe2807d35b23a4a3dd8a72507e93292fcd8f1
 '''
-{{< /highlight >}}
+```
 
 
 이와 같은 설치시 내부 네트워크 조작등 가장 강력하게 테스트를 해볼수 있다.

@@ -38,7 +38,7 @@ Container Storage Interface(이하 CSI)는 k8s에서 확장 가능한 볼륨 사
 
 기존의 Ceph RBD의 storage class는 아래와 같습니다.
 
-{{< highlight bash >}}
+```bash
 $ kubectl get sc ceph-rbd -o yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -57,11 +57,11 @@ parameters:
 provisioner: ceph.com/rbd
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
-{{< /highlight >}}
+```
 
 CSI용 Ceph RBD는 아래와 같습니다.
 
-{{< highlight bash >}}
+```bash
 $ kubectl get sc csi-rbd -o yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -79,7 +79,7 @@ parameters:
 provisioner: csi-rbdplugin
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
-{{< /highlight >}}
+```
 
 userId, userSecretName 와 같이 범용적이지 못한 부분이 제거되고 csiNodePublishSecretName와 같은 식으로 변경 되었습니다. 자세한 CSI spec은 [여기](https://github.com/container-storage-interface/spec/blob/master/spec.md)를 참고하면 됩니다.
 
@@ -108,24 +108,24 @@ ceph RBD와 CSI ceph RBD의 PV는 아래와 같이 차이가 있습니다.
 
 6. unique한 값이나 아래와 같은 방식으로 생성됨
 
-    {{< highlight bash >}}
+    ```bash
     $ # https://github.com/kubernetes-csi/external-provisioner/blob/release-0.3.0/cmd/csi-provisioner/csi-provisioner.go#L99
     $ # identity := strconv.FormatInt(timeStamp, 10) + "-" + strconv.Itoa(rand.Intn(10000)) + "-" + *provisioner
     $ echo "$(($(date +%s%N)/1000000))-$(($RANDOM%10000))-csi-rbdplugin"
-    {{< /highlight >}}
+    ```
 
 7. unique 한 값(e.g. UUID1)이면 됨
 
-    {{< highlight bash >}}
+    ```bash
     $ # https://github.com/ceph/ceph-csi/blob/v0.1.0/pkg/rbd/controllerserver.go#L56-L61
     $ # uniqueID := uuid.NewUUID().String()
     $ # volumeID := "csi-rbd-" + uniqueID
     $ python -c "import uuid ; print('csi-rbd-' + str(uuid.uuid1()))"
-    {{< /highlight >}}
+    ```
 
 참고. GO의 UUID는 UUID1을 쓰기때문에 아래와 같이 uuid로 부터 timestamp를 뽑아 낼 수 있습니다.
 
-{{< highlight bash >}}
+```bash
 $ echo -n '207db805-ab31-11e8-9798-b4969112d5e4' | \
   python -c '''
 import uuid,sys
@@ -136,7 +136,7 @@ date = datetime(1582, 10, 15) + timedelta(microseconds=u.time//10)
 print(date.replace(tzinfo=timezone.utc))
 '''
 2018-08-29 02:13:32.165734+00:00
-{{< /highlight >}}
+```
 
 ## Persistent Volume Claim 비교
 
@@ -171,7 +171,7 @@ Ceph RBD와 CSI Ceph RBD 둘다 rbd 바이너리가 있는 곳에서 사용가�
 
 storage class가 맞는지 `CEPH_RBD`에 넣어서 사용하면 됩니다.
 
-{{< highlight bash >}}
+```bash
 $ CEPH_RBD=${CEPH_RBD:-ceph-rbd}
 
 $ read POOL MONITOR ID SECRET SECRET_NS <<< \
@@ -187,13 +187,13 @@ $ KEY=$(kubectl get secret -n ${SECRET_NS} ${SECRET} \
 
 # 이후 아래와 같이 사용
 $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
-{{< /highlight >}}
+```
 
 ### CSI Ceph RBD의 rbd 커맨드
 
 비슷하게 CSI ceph rbd는 아래와 같이 확인 하면 됩니다. 이것도 `CSI_CEPH_RBD`를 넣어서 사용하면 됩니다. 이전과 바뀐건 adminId 같이 ID를 저장 안하고 secret의 key값에 계정이름을 넣는 다는 것입니다.
 
-{{< highlight bash >}}
+```bash
 $ CSI_CEPH_RBD=${CSI_CEPH_RBD:-csi-rbd}
 
 $ read POOL MONITOR SECRET SECRET_NS <<< \
@@ -211,7 +211,7 @@ $ KEY=$(kubectl get secret -n ${SECRET_NS} ${SECRET} \
 
 # 이후 아래와 같이 사용
 $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
-{{< /highlight >}}
+```
 
 # How to migration
 
@@ -246,12 +246,12 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
 1. 사전준비
     * CSI Ceph의 storageclass를 준비해 둡니다. 아래와 같이 기존에 ceph-rbd외에도 csi-rbd를 설정합니다. 이때 전략적으로 default storageclass를 조정하면 기존에 만약 storageclass없이 생성했던 PVC들을 이후부터는 csi-rbd로 붙일 수 있습니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ kubectl get sc
         NAME                 PROVISIONER                    AGE
         ceph-rbd             ceph.com/rbd                   33d
         csi-rbd (default)    csi-rbdplugin                  17d
-        {{< /highlight >}}
+        ```
 
         * CSI ceph은 아래 링크들을 확인하면 구축할 수 있습니다.
         * https://github.com/ceph/ceph-csi/tree/master/deploy/rbd/kubernetes
@@ -262,13 +262,13 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
 2. 작업할 PV 선정 및 안전 설정
     * 작업할 PV를 설정합니다. 앞으로 모든 `rbd-image`<->`pv`<->`pvc`<->`pod`의 기준을 이 PV기준으로 수집합니다. 이후 `${PV}` 의 값으로 사용합니다.
 
-        {{< highlight bash >}}
+        ```bash
         PV=pvc-f1b328c9-b3f8-11e8-8946-fa163eadf2df
-        {{< /highlight >}}
+        ```
 
     * 우선 기존의 PV들을 `delete` 이면 `retain`으로 변경해서 PV가 삭제되도 ceph에서 삭제가 안되도록 합니다. 왜냐하면 이후에 PV를 지우고 CSI용 PV로 재생성 해야하기 때문입니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ kubectl get pv
         NAME                                      CAPACITY  ACCESS MODES  RECLAIM POLICY  STATUS  CLAIM            STORAGECLASS   REASON   AGE
         pvc-f1b328c9-b3f8-11e8-8946-fa163eadf2df  1Gi       RWO           Delete          Bound   kube-system/nx   ceph-rbd                6h
@@ -279,39 +279,39 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
         $ kubectl get pv
         NAME                                      CAPACITY  ACCESS MODES  RECLAIM POLICY  STATUS  CLAIM            STORAGECLASS   REASON   AGE
         pvc-f1b328c9-b3f8-11e8-8946-fa163eadf2df  1Gi       RWO           Retain          Bound   kube-system/nx   ceph-rbd                6h
-        {{< /highlight >}}
+        ```
 
 3. 작업될 `rbd-image`, `pvc`, `pod`을 알아냄
     * 이후에 변경할 Ceph의 기존 volume 이름을 가져옵니다. `rbd-image`<->`pv`<->`pvc`<->`pod`이 관계중 `rbd-image`에 해당합니다. 이 format은 `kubernetes-dynamic-pvc-${UUID1}`과 같은 포맷으로 구성되어 있습니다. 이후에 CSI 0.3.0 spec의 이름으로 변경 시켜야 합니다. 이후부터는 `${RBDIMAGENAME}`으로 사용합니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ RBDIMAGENAME=$(kubectl get pv ${PV} -o go-template='{{ .spec.rbd.image }}')
         $ echo $RBDIMAGENAME
         kubernetes-dynamic-pvc-f201332c-b3f8-11e8-aeac-22581cfb0c23
-        {{< /highlight >}}
+        ```
 
     * 자신이 이후에 변경될 PV의 이름을 가져옵니다. 이후에 `${NEWPVNAME}`로 사용합니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ NEWPVNAME=$(echo "pvc-$(echo $PV | cut -d'-' -f2,3,4 | sed 's/-//g')")
         $ echo ${NEWPVNAME}
         pvc-f1b328c9b3f811e8
-        {{< /highlight >}}
+        ```
 
     * PV에 연결된 PVC의 이름을 가져옵니다. `rbd-image`<->`pv`<->`pvc`<->`pod`의 관계중 `pvc`에 해당합니다. 이때 pvc, pod이 다 사용할 namespace도 얻어옵니다. 이후에 각각 `${NAMESPACE}`, `${PVCNAME}` 으로 사용합니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ read NAMESPACE PVCNAME <<< \
           $(kubectl get pv $PV \
             -o go-template='{{ .spec.claimRef.namespace }}
          {{ .spec.claimRef.name }}')
         $ echo ${NAMESPACE} ${PVCNAME}
         kube-system nx
-        {{< /highlight >}}
+        ```
 
     * PVC에 연결된 pod의 이름을 가져옵니다. k8s 1.12의 kubectl에는 [이기능](https://github.com/kubernetes/kubernetes/pull/65837)이 포함되어 있어서 kubectl describe로 볼수 있지만 아닐시 그냥 모든 pod을 찾아서 pvc를 확인해서 찾습니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ PODNAME=$(kubectl get pods -n $NAMESPACE -o go-template="""
           {{- range .items -}}
             {{\$metadata:=.metadata}}
@@ -325,27 +325,27 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
           {{- end }}""")
         $ echo ${PODNAME}
         nx-86954666cb-g8v5k
-        {{< /highlight >}}
+        ```
 
 4. 변경할 PV와 PVC를 가져와서 csi version yaml로 생성 합니다.
 
     * PV를 CSI 형태로 변경하기위한 아래의 스크립트를 이용하면 이후에 `csi-pv-${NEWPVNAME}.yaml` 형태 파일로 생성 됩니다. `python csi-pv.py ${PV}` 로 생성 하면 됩니다. 스크립트 안에 `CSIKEY`는 실제 csi에서 ceph admin key 저장된 이름입니다. 만약 그 secret 이름이 `csi-rbd-secret` 가 아니면 변경해야 됩니다. `CSIKEY_NS` 도 동일하게 secret의 namespace의 이름이니 만약 `kube-system`이 아니면 변경해야 합니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ curl -sO https://gist.githubusercontent.com/leoh0/03ca401d690579fdf65c222fa5bfccef/raw/c5439a500c46803b599a0bccfc0f36d11664bd3a/csi-pv.py
         $ python csi-pv.py ${PV}
         check csi-pv-pvc-f1b328c9b3f811e8.yaml
-        {{< /highlight >}}
+        ```
 
         [gist 참고](https://gist.github.com/leoh0/03ca401d690579fdf65c222fa5bfccef)
 
     * PVC를 CSI 형태로 변경하기위한 아래의 스크립트를 이용하면 이후에 `csi-pvc-${NEWPVNAME}.yaml` 형태 파일로 생성 됩니다. `python csi-pvc.py ${PVCNAME} -n ${NAMESPACE}` 로 생성 하면 됩니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ curl -sO https://gist.githubusercontent.com/leoh0/cd17492cc5274ae7e41fdf56967e0177/raw/33269b4584a02caefc8640100592484f34494fe6/csi-pvc.py
         $ python csi-pvc.py ${PVCNAME} -n ${NAMESPACE}
         check csi-pvc-pvc-f1b328c9b3f811e8.yaml
-        {{< /highlight >}}
+        ```
 
         [gist 참고](https://gist.github.com/leoh0/cd17492cc5274ae7e41fdf56967e0177)
 
@@ -353,9 +353,9 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
 
     * 실제 pvc를 삭제해도 바로 삭제 되지 않습니다. pod이 삭제될때까지 기다리는 상태이니 이상태까지는 우선 영향을 끼치진 않습니다. 다만 삭제를 시작하면 더이상 프로세스를 되돌리기 힘들기 때문에 여기서부터는 신중히 하는게 좋습니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ kubectl delete pvc -n ${NAMESPACE} ${PVCNAME}
-        {{< /highlight >}}
+        ```
 
 6. 이제 중요한 pod과 pv를 삭제시켜서 새로운 csi 형태로 붙일 준비를 합니다.
 
@@ -363,32 +363,32 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
 
     * pod을 삭제하기 전에 scheduling 시킬 곳을 지정하여 그곳에 이미지를 새로 받아 놓으면 더욱 빨리 pod을 옮길 수 있습니다. 이건 여러 가지 전략들이 너무 긴 이야기라 나중에 따로 정리할 생각입니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ kubectl delete pods -n ${NAMESPACE} ${PODNAME}
         $ kubectl delete pv ${PV}
-        {{< /highlight >}}
+        ```
 
 7. rbd이름을 변경합니다.
 
     * 미리 준비한 RBD 커맨드로 pv가 pod으로 부터 unmount, unmap 되어 떨어져서 rbd를 변경할 수 있는 상태인지 체크하여 이름을 변경 시킵니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ while true; do
           rbd --pool ${POOL} --id ${ID} -m ${MONITOR} --key=${KEY} \
             status ${RBDIMAGENAME} | grep -q 'watcher=' || \
             rbd --pool ${POOL} --id ${ID} -m ${MONITOR} --key=${KEY} \
             mv "${POOL}/${RBDIMAGENAME}" "${POOL}/${NEWPVNAME}"
           done
-        {{< /highlight >}}
+        ```
 
 8. csi 형태 pv와 pvc를 재생성 합니다.
 
     * 미리 위에서 준비한 yaml를 이용하여 csi형태로 pv와 pvc를 생성합니다.
 
-        {{< highlight bash >}}
+        ```bash
         $ kubectl create -f csi-pv-${NEWPVNAME}.yaml
         $ kubectl create -f csi-pvc-${NEWPVNAME}.yaml -n ${NAMESPACE}
-        {{< /highlight >}}
+        ```
 
 9. pod이 잘 뜨는지 확인합니다.
 
@@ -398,7 +398,7 @@ $ rbd --pool $POOL --id $ID -m $MONITOR --key=$KEY list
 
 [gist 참고](https://gist.github.com/leoh0/418a4598e7ea8541eddead5a9f87622e)
 
-{{< highlight bash >}}
+```bash
 #!/usr/bin/env bash
 
 CEPH_RBD=${CEPH_RBD:-ceph-rbd}
@@ -493,7 +493,7 @@ kubectl get pv ${NEWPVNAME} -o yaml | \
     kubectl replace -f -
 
 echo "kubectl get pods -n ${NAMESPACE} ${NEWPODNAME}"
-{{< /highlight >}}
+```
 
 # 정리
 

@@ -11,7 +11,7 @@ tags:
 ---
 GPT 일때 가능
 
-{{< highlight bash "linenos=table" >}}
+```bash
 #!/usr/bin/env bash
 
 if mount | grep -q 'ntfs' ; then
@@ -33,4 +33,4 @@ if mount | grep -q 'ntfs' ; then
 else
   echo -e "\033[01;36mThere is no ntfs disk in here.\033[00m"
 fi
-{{< /highlight >}}
+```

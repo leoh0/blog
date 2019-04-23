@@ -38,11 +38,11 @@ brew install chrome-cli
 
 그리고 그냥 아래 같은 방법을 쓰면 chrome 에서 열려 있는 유튜브 페이지들을 전부 조회해서 mp3로 다운로드 할 수 있다.
 
-{{< highlight bash>}}
+```bash
 function yd(){
   for l in $(chrome-cli list tabs | grep YouTube | cut -d '[' -f2- | cut -d':' -f2- | cut -d']' -f1); do
     url=$(chrome-cli info -t $l | grep '^Url: ' | cut -d' ' -f2)
     (cd /want/to/download/mp3; youtube-dl -t --extract-audio --audio-format mp3 $url)
   done
 }
-{{< /highlight >}}
+```

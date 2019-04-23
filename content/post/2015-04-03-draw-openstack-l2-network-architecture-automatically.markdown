@@ -59,7 +59,7 @@ ascii 로 그린 architecture 들이다.
 아래 스크립트를 컴퓨트 노드에서 돌리면 해당 정보를 수집해서 그리게 된다. (물론 네트워크 노드도 가능..)   
 귀찮아서 하드코딩한 부분들은 편하게 고쳐쓰시길..
 
-{{< highlight bash "linenos=table" >}}
+```bash
 #!/bin/bash
 
 sudo apt-get install -qqy ethtool libgraph-easy-perl graphviz > /dev/null
@@ -127,4 +127,4 @@ done
 rm -f $EXCEPT
 
 echo $result | graph-easy
-echo $result | graph-easy -as dot | dot -Tpng -o l2path.png{{< /highlight >}}
+echo $result | graph-easy -as dot | dot -Tpng -o l2path.png```

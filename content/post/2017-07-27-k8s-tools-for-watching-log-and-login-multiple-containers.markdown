@@ -89,7 +89,7 @@ curl -s 'https://gist.githubusercontent.com/leoh0/'\
 아래는 전체 소스입니다.
 https://gist.github.com/leoh0/c47dca1c98f998f0d0884c3560afac54
 
-{{< highlight bash "linenos=table" >}}
+```bash
 function kl() {
   chkcommand() {
     command -v $1 >/dev/null 2>&1 || { echo >&2 "Plz install $1 first. Aborting."; return 1; }
@@ -121,6 +121,6 @@ function kl() {
       tmux -2 a -t $tmuxname
   fi
 }
-{{< /highlight >}}
+```
 
 참고: [original kubetail](https://github.com/johanhaleby/kubetail)

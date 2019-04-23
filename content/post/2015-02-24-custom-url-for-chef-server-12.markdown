@@ -16,7 +16,7 @@ chef server ssl verification 때문에 그냥 domain 인증서를 제대로 적�
 
 아래 처럼 해당 파일을 수정한다.
 
-{{< highlight ruby >}}
+```ruby
 ...
 server_name = "chef.yourdomain.com"
 api_fqdn = server_name
@@ -26,7 +26,7 @@ nginx['server_name'] = server_name
 nginx['ssl_certificate'] = "/var/opt/chef-server/nginx/ca/#{server_name}.crt"
 nginx['ssl_certificate_key'] = "/var/opt/chef-server/nginx/ca/#{server_name}.key"
 lb['fqdn'] = server_name
-{{< /highlight >}}
+```
 
 이후에 해당 컨피그 내용으로 적용한다.
 
