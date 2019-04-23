@@ -24,7 +24,7 @@ images = [
 
 대충 결과물은 아래와 같습니다. 기존 `admin.conf`와 달리 user 아래 token을 사용하는걸 알 수 있습니다.
 
-```
+```yaml
 apiVersion: v1
 clusters:
 - cluster:

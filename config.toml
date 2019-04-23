@@ -2,10 +2,10 @@ baseurl = "https://leoh0.github.io/" # Controls base URL sitewide
 languageCode = "en-us" # Controls site language
 title = "> /dev/null" # Homepage title and page title suffix
 paginate = 11 # Number of posts to show before paginating
-copyright = "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License."
+#copyright = "This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License."
 
-[author]
-    name = "Eohyung Lee"
+#[author]
+#    name = "Eohyung Lee"
 
 # Controls default theme and theme components
 theme = [
@@ -92,6 +92,8 @@ keywords = [
   powered_by = false # Optional, set false to disable credits
   related_content_limit = 5
   toc = true
+
+  customCSS = ["css/prism.css"]
 
   images = [
     "https://source.unsplash.com/collection/983219/2000x1322"
