@@ -47,7 +47,7 @@ users:
 
 만드는 예는 아래와 같습니다.
 [gist 링크](https://gist.github.com/leoh0/ae7db2adad939e1c0c805cd1879ebbb6)
-{{< highlight bash >}}
+```bash
 #!/usr/bin/env bash
 
 # In general, operators need a `admin.conf` file when they use the kubectl
@@ -91,4 +91,4 @@ CLUSTER_NAME=$(kubectl config get-clusters | tail -n1)
 kubectl config set-context cluster-admin@${CLUSTER_NAME} \
   --cluster=${CLUSTER_NAME} --user=cluster-admin
 kubectl config use-context cluster-admin@${CLUSTER_NAME}
-{{< /highlight >}}
+```
