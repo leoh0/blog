@@ -89,5 +89,9 @@ keywords = [
   related_content_limit = 5
   toc = true
 
+  images = [
+    "https://source.unsplash.com/collection/983219/2000x1322"
+  ] # Suggested, controls default Open Graph images
+
   #themeColor = "#494f5c"
   themeColor = "#111111"
