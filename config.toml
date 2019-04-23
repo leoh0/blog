@@ -91,7 +91,3 @@ keywords = [
 
   #themeColor = "#494f5c"
   themeColor = "#111111"
-
-[params.modules.fractal_forest]
-  enabled = true # Optional, set false to disable module
-  decoders = ["bpgdec8a"] # Optional, 8-bit javascript decoder with animation
