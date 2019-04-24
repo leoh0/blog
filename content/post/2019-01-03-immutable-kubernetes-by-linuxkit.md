@@ -1,5 +1,5 @@
 +++
-title = "2019 01 03 Immutable Kubernetes by Linuxkit"
+title = "Immutable Kubernetes by Linuxkit"
 date = 2019-01-03T22:33:17+09:00
 description = ""
 draft = false
