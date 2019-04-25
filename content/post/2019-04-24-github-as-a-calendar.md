@@ -1,7 +1,7 @@
 ---
 title: "Github as a Calendar"
 date: 2019-04-24T08:55:44+09:00
-draft: true
+draft: false
 toc: false
 categories: ["technology"]
 tags: ["git", "github", "calendar"]
@@ -89,14 +89,14 @@ images: [
 
 ### 실행
 
-저는 이런 것들을 돌리기 위해서 gcp 에서 [always free](https://cloud.google.com/free/docs/gcp-free-tier#always-free-usage-limits)인 자원을 사용합니다. `f1-micro`에 특정 지역인 경우 무료이기 때문에 이런 장난감을 돌리기 용의 합니다. 그래서 우선 gcp 에서 f1-micro에 ubuntu-18.04 이미지로 사용했습니다.
+저는 이런 것들을 돌리기 위해서 gcp 에서 [always free](https://cloud.google.com/free/docs/gcp-free-tier#always-free-usage-limits)인 자원을 사용합니다. `f1-micro`에 특정 지역인 경우 무료이기 때문에 이런 장난감을 돌리기 용의 합니다. 그래서 우선 gcp 에서 us-east1 리전에서 f1-micro에 ubuntu-18.04 이미지로 사용했습니다.
 
-부팅 이후 아래와 같이 실행하면 cron이 등록 됩니다. 이후 정각부터 cron으로 구동되어 github contribution을 업데이트 해주게 됩니다. 보통 정각에 구동되면 반영되기 까지 3-4분 정도 소요됩니다.
+부팅 이후 아래와 같이 실행하면 cron이 등록 됩니다. 이후 `밤 12시 정각부터 cron으로 구동되어 github contribution을 업데이트` 해주게 됩니다. 보통 정각에 구동되면 반영되기 까지 1-2분 정도 소요됩니다.
 
 다른 환경에서 구동시키려면 아래 스크립트를 돌리기 전에 스크립트 내용을 아시면 좋습니다. 
 
 ```
-curl https://gist.githubusercontent.com/leoh0/06f763c23b46e1f07c05a4df7c9abdc2/raw/9b7c756d4e957fb31d35a215a654ef200f62f882/github-contribution-as-a-calendar.sh | bash
+curl https://gist.githubusercontent.com/leoh0/06f763c23b46e1f07c05a4df7c9abdc2/raw/fd90af927cbd264c233998ca3ee4483fa78aa6ff/github-contribution-as-a-calendar.sh | bash
 ```
 
 ### Review code
@@ -135,14 +135,17 @@ if [[ -z "$COMMIT_USERNAME" \
     echo "# This token MUST include follow permissions. delete_repo, repo"
     echo "# https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line"
     echo "export GITHUB_APITOKEN="
+
     exit 1
 fi
 
-# setup docker
-if ! command -v docker >/dev/null ; then
-    curl https://releases.rancher.com/install-docker/18.09.sh | sh
-
-    sudo usermod -aG docker "$USER"
+# setup date for using timezone
+if [ ! -d "/usr/share/zoneinfo" ]; then
+    export DEBIAN_FRONTEND=noninteractive
+    ERROR="ERROR: Installing timezone package is failed so you need to install "
+    ERROR="$ERROR timezone package by yourself before run this script."
+    sudo apt update
+    sudo apt install -y tzdata || ( echo "$ERROR" ; exit 1 )
 fi
 
 # setup github-contribution bin
@@ -197,16 +200,13 @@ machine api.github.com
   password $GITHUB_APITOKEN
 EOF
 
-# setup date for using timezone
-if [ ! -d "/usr/share/zoneinfo" ]; then
-    export DEBIAN_FRONTEND=noninteractive
-    ERROR="ERROR: Installing timezone package is failed so you need to install "
-    ERROR="$ERROR timezone package by yourself before run this script."
-    sudo apt install -y tzdata || ( echo "$ERROR" ; exit 1 )
-fi
-
 # setup cron
 if ! crontab -l | grep -q update-github-contribution.sh; then
+    # ensure exist
+    sudo touch "/var/spool/cron/crontabs/$USER"
+    sudo chmod 600 "/var/spool/cron/crontabs/$USER"
+    sudo chown "$USER".crontab "/var/spool/cron/crontabs/$USER"
+
     # add to cron
     crontab -l > tempcron
 
@@ -216,5 +216,12 @@ if ! crontab -l | grep -q update-github-contribution.sh; then
 
     crontab tempcron
     rm -f tempcron
+fi
+
+# setup docker
+if ! command -v docker >/dev/null ; then
+    curl https://releases.rancher.com/install-docker/18.09.sh | sh
+
+    sudo usermod -aG docker "$USER"
 fi
 ```
