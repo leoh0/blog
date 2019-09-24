@@ -52,6 +52,60 @@ $ kubectl get ing
 NAME     HOSTS        ADDRESS   PORTS   AGE
 nginx    172.17.6               80      53m
 nginx2   2886795270             80      52m
+$ kubectl get ing nginx -o yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"extensions/v1beta1","kind":"Ingress","metadata":{"annotations":{},"name":"nginx","namespace":"default"},"spec":{"rules":[{"host":"172.17.6","http":{"paths":[{"backend":{"serviceName":"nginx","servicePort":80},"path":"/"}]}}]}}
+  creationTimestamp: "2019-09-24T10:53:27Z"
+  generation: 3
+  name: nginx
+  namespace: default
+  resourceVersion: "3708"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/ingresses/nginx
+  uid: ce22f2d5-1954-47b1-aaeb-72b929a20d12
+spec:
+  rules:
+  - host: 172.17.6
+    http:
+      paths:
+      - backend:
+          serviceName: apple-service
+          servicePort: 5678
+        path: /
+status:
+  loadBalancer:
+    ingress:
+    - {}
+$ kubectl get ing nginx2 -o yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"extensions/v1beta1","kind":"Ingress","metadata":{"annotations":{},"name":"nginx2","namespace":"default"},"spec":{"rules":[{"host":"2886795270","http":{"paths":[{"backend":{"serviceName":"nginx","servicePort":80},"path":"/"}]}}]}}
+  creationTimestamp: "2019-09-24T10:54:57Z"
+  generation: 3
+  name: nginx2
+  namespace: default
+  resourceVersion: "3813"
+  selfLink: /apis/extensions/v1beta1/namespaces/default/ingresses/nginx2
+  uid: 202b025b-8b2f-44f2-8f4a-272edbff3a96
+spec:
+  rules:
+  - host: "2886795270"
+    http:
+      paths:
+      - backend:
+          serviceName: apple-service
+          servicePort: 5678
+        path: /
+status:
+  loadBalancer:
+    ingress:
+    - {}
 ```
 
 아래와 같이 바로 ip만으로도 정상적인 응답을 하게 됩니다.
