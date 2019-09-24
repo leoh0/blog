@@ -18,6 +18,10 @@ kubernetes ingress는 일반적으로 virtual host, virtual path등을 위한 �
 
 그렇다면 진짜로 ip로 들어오는 리퀘스트를 default backend가 아닌 다른 service로 연결할 수 없을까요? 물론 이 포스트를 쓰는 목적이지만 제한적이지만 답은 있습니다.
 
+여기서부터는 해설 입니다.
+
+# 해설
+
 우선 힌트는 위의 [ingress validation](https://github.com/kubernetes/kubernetes/blob/release-1.16/pkg/apis/networking/validation/validation.go#L247) 라고 할 수 있는데, 뭐냐하면 사실 위에서 ParseIP를 통해 ip address가 파싱되는지를 확인해서 이로 설정되는 것을 막고 있지만 실제 ip address는 다양한 방법으로 표기 가능합니다.
 
 예를 들어서 172.17.0.6 이라는 ip가 있다면 다음과 같은 방법들이 가능합니다.
@@ -116,7 +120,7 @@ $ curl 2886795270
 apple
 ```
 
-# 해설
+# 추가 해설
 
 사실 이게 가능한건 curl의 특성때문입니다. 실제 `http://2886795270`를 브라우저에서 호출하면 `default backend - 404`를 호출합니다.
 하지만 curl에서 작동하는 이유는 `2886795270`와 같이 기본 ip address가 아닌 표기법(notation)을 이용할 시 ip로 자동으로 변환해서 호출하며 Host header에 해당 host 이름을 넣어주기 때문입니다.
