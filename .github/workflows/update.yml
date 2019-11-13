@@ -11,6 +11,18 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install hugo
       run: sudo apt install -y hugo
+    - name: Create github config
+      run: |
+        echo "[user]" > .gitconfig
+        echo "  name = Eohyung Lee" >> .gitconfig
+        echo "  email = liquidnuker@gmail.com" >> .gitconfig
+        echo "[github]" >> .gitconfig
+        echo "	user = leoh0" >> .gitconfig
+    - name: Create netrc
+      run: |
+        echo "machine github.com" > .netrc
+        echo "  login leoh0" >> .netrc
+        echo "  password ${{ secrets.GITHUB_TOKEN }}" >> .netrc
     - name: Update photo
       run: |
         LASTNUM=$(cat public/c/last)
@@ -64,4 +76,4 @@ jobs:
 
         echo "$NEWNUM" > public/c/last
 
-        cat public/c/index.html
+        ./deploy.sh
