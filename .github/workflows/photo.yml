@@ -1,6 +1,8 @@
-name: CI
+name: update-photo
 
-on: [push]
+on:
+  schedule:
+  - cron: '*/2 * * * *'
 
 jobs:
   build:
