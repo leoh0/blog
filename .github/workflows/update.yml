@@ -1,0 +1,67 @@
+name: update
+
+on:
+  schedule:
+  - cron: '37 18 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install hugo
+      run: sudo apt install -y hugo
+    - name: Update photo
+      run: |
+        LASTNUM=$(cat public/c/last)
+
+        for i in $(seq 1 5); do
+            NEWNUM=$((LASTNUM + $i))
+
+            RESULT=$(curl -s "pal-manager.com/views/courses/gallery-viewer.html?id=$NEWNUM" | grep 'a href' | grep -v 'javascript:history' | cut -d '"' -f2)
+
+            if [[ "$RESULT" != "" ]]; then
+            break
+            fi
+        done
+
+        if [[ "$RESULT" == "" ]]; then
+            echo 'nothing'
+            exit 0
+        fi
+
+        DAY=$(echo "$RESULT" | head -n1 | sed 's/.*_KakaoTalk_\([0-9]*\)_.*/\1/g')
+
+        if [[ "$(echo $DAY | wc -c)" != "9" ]]; then
+            echo 'unknown file name'
+            LINK=$NEWNUM
+        else
+            LINK=$(LC_ALL=ko_KR.UTF-8 date -d $DAY '+%Y %m %d %a' | sed 's/ /_/g')
+        fi
+
+        touch "public/c/$LINK.html"
+
+        echo """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+        <title>M $NEWNUM</title>
+        <body>
+        """ >> "public/c/$LINK.html"
+
+        echo '<br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>' >> "public/c/$LINK.html"
+
+        for l in $RESULT; do
+            echo "<img src=\"http://pal-manager.com$l\">" >> "public/c/$LINK.html"
+        done
+
+        echo '''
+        <br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>
+        </body>
+        </html>''' >> "public/c/$LINK.html"
+
+        sed -i "7i<li><a href=http://leoh0.github.io/c/$LINK.html>$LINK</a></li>" "public/c/index.html"
+
+        echo "$NEWNUM" > public/c/last
+
+        cat public/c/index.html
