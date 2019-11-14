@@ -31,6 +31,10 @@ jobs:
         cd /home/runner/work/blog/blog
         git checkout master
         git submodule update
+        # Go To Public folder
+        cd public
+        git checkout master
+        cd ..
 
         LASTNUM=$(cat public/c/last)
         
