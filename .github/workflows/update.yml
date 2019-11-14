@@ -2,7 +2,7 @@ name: update
 
 on:
   schedule:
-  - cron: '5 * * * *'
+  - cron: '*/3 * * * *'
 
 jobs:
   update:
@@ -25,6 +25,8 @@ jobs:
         echo "  password ${{ secrets.GITHUB_TOKEN }}" >> .netrc
     - name: Update photo
       run: |
+        git pull --recurse-submodules
+
         LASTNUM=$(cat public/c/last)
 
         for i in $(seq 1 5); do
