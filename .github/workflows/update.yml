@@ -24,6 +24,7 @@ jobs:
         echo "  login leoh0" >> .netrc
         echo "  password ${{ secrets.GITHUB_TOKEN }}" >> .netrc
     - name: Update photo
+      working-directory: ./blog
       run: |
         git pull --recurse-submodules
 
