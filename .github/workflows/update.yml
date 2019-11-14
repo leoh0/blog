@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install packages
-      run: sudo apt install -y hugo git
+      run: sudo apt install -y hugo git curl
     - name: Create github config
       run: |
         echo "[user]" > .gitconfig
