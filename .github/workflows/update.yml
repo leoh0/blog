@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      with:
+        submodules: true
     - name: Install packages
       run: sudo apt install -y hugo git curl
     - name: Create github config
