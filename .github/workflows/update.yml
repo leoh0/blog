@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Install hugo
-      run: sudo apt install -y hugo
+    - name: Install packages
+      run: sudo apt install -y hugo git
     - name: Create github config
       run: |
         echo "[user]" > .gitconfig
