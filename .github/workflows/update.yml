@@ -24,8 +24,8 @@ jobs:
         echo "  login leoh0" >> .netrc
         echo "  password ${{ secrets.GITHUB_TOKEN }}" >> .netrc
     - name: Update photo
-      working-directory: ./blog/blog
       run: |
+        cd /home/runner/work/blog/blog
         git pull --recurse-submodules
 
         LASTNUM=$(cat public/c/last)
