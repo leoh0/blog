@@ -29,6 +29,7 @@ jobs:
     - name: Update photo
       run: |
         cd /home/runner/work/blog/blog
+        git checkout master
         git submodule update
 
         LASTNUM=$(cat public/c/last)
