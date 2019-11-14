@@ -15,16 +15,16 @@ jobs:
       run: sudo apt install -y hugo git curl
     - name: Create github config
       run: |
-        echo "[user]" > .gitconfig
-        echo "  name = Eohyung Lee" >> .gitconfig
-        echo "  email = liquidnuker@gmail.com" >> .gitconfig
-        echo "[github]" >> .gitconfig
-        echo "	user = leoh0" >> .gitconfig
+        echo "[user]" > $HOME/.gitconfig
+        echo "  name = Eohyung Lee" >> $HOME/.gitconfig
+        echo "  email = liquidnuker@gmail.com" >> $HOME/.gitconfig
+        echo "[github]" >> $HOME/.gitconfig
+        echo "	user = leoh0" >> $HOME/.gitconfig
     - name: Create netrc
       run: |
-        echo "machine github.com" > .netrc
-        echo "  login leoh0" >> .netrc
-        echo "  password ${{ secrets.GITHUB_TOKEN }}" >> .netrc
+        echo "machine github.com" > $HOME/.netrc
+        echo "  login leoh0" >> $HOME/.netrc
+        echo "  password ${{ secrets.GITHUB_TOKEN }}" >> $HOME/.netrc
     - name: Update photo
       run: |
         cd /home/runner/work/blog/blog
