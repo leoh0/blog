@@ -2,126 +2,126 @@ name: update
 
 on:
   schedule:
-  - cron: '58 * * * *'
+    - cron: "58 * * * *"
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-      with:
-        submodules: true
-    - name: Install packages
-      run: sudo apt install -y hugo git curl
-    - name: Create github config
-      run: |
-        echo "[user]" > $HOME/.gitconfig
-        echo "  name = Eohyung Lee" >> $HOME/.gitconfig
-        echo "  email = liquidnuker@gmail.com" >> $HOME/.gitconfig
-        echo "[github]" >> $HOME/.gitconfig
-        echo "	user = leoh0" >> $HOME/.gitconfig
-    - name: Create netrc
-      run: |
-        echo "machine github.com" > $HOME/.netrc
-        echo "  login leoh0" >> $HOME/.netrc
-        echo "  password ${{ secrets.GithubToken }}" >> $HOME/.netrc
-        chmod 600 $HOME/.netrc
-    - name: Update photo
-      run: |
-        cd /home/runner/work/blog/blog
-        git checkout master
-        git submodule update
-        # Go To Public folder
-        cd public
-        git checkout master
-        cd ..
+      - uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Install packages
+        run: sudo apt install -y hugo git curl
+      - name: Create github config
+        run: |
+          echo "[user]" > $HOME/.gitconfig
+          echo "  name = Eohyung Lee" >> $HOME/.gitconfig
+          echo "  email = liquidnuker@gmail.com" >> $HOME/.gitconfig
+          echo "[github]" >> $HOME/.gitconfig
+          echo "	user = leoh0" >> $HOME/.gitconfig
+      - name: Create netrc
+        run: |
+          echo "machine github.com" > $HOME/.netrc
+          echo "  login leoh0" >> $HOME/.netrc
+          echo "  password ${{ secrets.GithubToken }}" >> $HOME/.netrc
+          chmod 600 $HOME/.netrc
+      - name: Update photo
+        run: |
+          cd /home/runner/work/blog/blog
+          git checkout master
+          git submodule update
+          # Go To Public folder
+          cd public
+          git checkout master
+          cd ..
 
-        LASTNUM=$(cat public/c/last)
-        
-        echo "$LASTNUM"
+          LASTNUM=$(cat public/c/last)
 
-        for i in $(seq 1 5); do
-            NEWNUM=$((LASTNUM + $i))
+          echo "$LASTNUM"
 
-            RESULT=$(curl -s "pal-manager.com/views/courses/gallery-viewer.html?id=$NEWNUM" | grep 'a href' | grep -v 'javascript:history' | cut -d '"' -f2)
+          for i in $(seq 1 5); do
+              NEWNUM=$((LASTNUM + $i))
 
-            if [[ "$RESULT" != "" ]]; then
-            break
-            fi
-        done
+              RESULT=$(curl -s "pal-manager.com/views/courses/gallery-viewer.html?id=$NEWNUM" | grep 'a href' | grep -v 'javascript:history' | cut -d '"' -f2)
 
-        echo "$RESULT"
-        if [[ "$RESULT" == "" ]]; then
-            echo 'nothing'
-            exit 0
-        fi
+              if [[ "$RESULT" != "" ]]; then
+              break
+              fi
+          done
 
-        DAY=$(echo "$RESULT" | head -n1 | sed 's/.*_KakaoTalk_\([0-9]*\)_.*/\1/g')
+          echo "$RESULT"
+          if [[ "$RESULT" == "" ]]; then
+              echo 'nothing'
+              exit 0
+          fi
 
-        echo "$DAY"
+          DAY=$(echo "$RESULT" | head -n1 | sed 's/\/.*\/.*\/.*_\([0-9]*\)_.*/\1/g')
 
-        if [[ "$(echo $DAY | wc -c)" != "9" ]]; then
-            echo 'unknown file name'
-            LINK=$NEWNUM
-        else
-            LINK=$(LC_ALL=ko_KR.UTF-8 date -d $DAY '+%Y %m %d %a' | sed 's/ /_/g')
-        fi
+          echo "$DAY"
 
-        touch "public/c/$LINK.html"
+          if [[ "$(echo $DAY | wc -c)" != "9" ]]; then
+              echo 'unknown file name'
+              LINK=$NEWNUM
+          else
+              LINK=$(LC_ALL=ko_KR.UTF-8 date -d $DAY '+%Y %m %d %a' | sed 's/ /_/g')
+          fi
 
-        echo """
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-        <title>M $NEWNUM</title>
-        <body>
-        """ >> "public/c/$LINK.html"
+          touch "public/c/$LINK.html"
 
-        echo '<br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>' >> "public/c/$LINK.html"
+          echo """
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+          <title>M $NEWNUM</title>
+          <body>
+          """ >> "public/c/$LINK.html"
 
-        for l in $RESULT; do
-            echo "<img src=\"http://pal-manager.com$l\">" >> "public/c/$LINK.html"
-        done
+          echo '<br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>' >> "public/c/$LINK.html"
 
-        echo '''
-        <br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>
-        </body>
-        </html>''' >> "public/c/$LINK.html"
+          for l in $RESULT; do
+              echo "<img src=\"http://pal-manager.com$l\">" >> "public/c/$LINK.html"
+          done
 
-        sed -i "7i<li><a href=http://leoh0.github.io/c/$LINK.html>$LINK</a></li>" "public/c/index.html"
+          echo '''
+          <br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>
+          </body>
+          </html>''' >> "public/c/$LINK.html"
 
-        echo "$NEWNUM" > public/c/last
+          sed -i "7i<li><a href=http://leoh0.github.io/c/$LINK.html>$LINK</a></li>" "public/c/index.html"
 
-        echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
+          echo "$NEWNUM" > public/c/last
 
-        # Build the project.
-        hugo # if using a theme, replace with `hugo -t <YOURTHEME>`
+          echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 
-        # Go To Public folder
-        cd public
-        # Add changes to git.
-        git add .
+          # Build the project.
+          hugo # if using a theme, replace with `hugo -t <YOURTHEME>`
 
-        # Commit changes.
-        msg="rebuilding site `date`"
-        if [ $# -eq 1 ]
-          then msg="$1"
-        fi
-        git commit -m "$msg"
+          # Go To Public folder
+          cd public
+          # Add changes to git.
+          git add .
 
-        # Push source and build repos.
-        git push origin master
+          # Commit changes.
+          msg="rebuilding site `date`"
+          if [ $# -eq 1 ]
+            then msg="$1"
+          fi
+          git commit -m "$msg"
 
-        # Come Back up to the Project Root
-        cd ..
+          # Push source and build repos.
+          git push origin master
 
-        git add .
-        # Commit changes.
-        msg="make site `date`"
-        if [ $# -eq 1 ]
-          then msg="$1"
-        fi
-        git commit -m "$msg"
+          # Come Back up to the Project Root
+          cd ..
 
-        # Push source and build repos.
-        git push origin master
+          git add .
+          # Commit changes.
+          msg="make site `date`"
+          if [ $# -eq 1 ]
+            then msg="$1"
+          fi
+          git commit -m "$msg"
+
+          # Push source and build repos.
+          git push origin master
