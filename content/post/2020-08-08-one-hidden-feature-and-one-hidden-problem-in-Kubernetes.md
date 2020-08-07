@@ -1,5 +1,5 @@
 ---
-title: "2020 08 08 One Hidden Feature and One Hidden Problem in Kubernetes"
+title: "One hidden feature and one hidden problem in kubernetes"
 date: 2020-08-08T01:12:11+09:00
 draft: false
 toc: false
