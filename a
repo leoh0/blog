@@ -42,7 +42,7 @@ echo '''
 <br><a href="https://leoh0.github.io/c/">이전으로 돌아가기</a><br>
 </body>
 </html>''' >> "public/c/$LINK.html"
-sed -i "7i<li><a href=http://leoh0.github.io/c/$LINK.html>$LINK</a></li>" "public/c/index.html"
+gsed -i "7i<li><a href=http://leoh0.github.io/c/$LINK.html>$LINK</a></li>" "public/c/index.html"
 echo "$NEWNUM" > public/c/last
 echo -e "\033[0;32mDeploying updates to GitHub...\033[0m"
 # Build the project.
