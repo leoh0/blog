@@ -6,7 +6,7 @@
 #cd ..
 LASTNUM=$(cat public/c/last)
 echo "$LASTNUM"
-for i in $(seq 1 50); do
+for i in $(seq 1 50000); do
     NEWNUM=$((LASTNUM + $i))
     RESULT=$(curl -s "pal-manager.com/views/courses/gallery-viewer.html?id=$NEWNUM" | grep 'a href' | grep -v 'javascript:history' | cut -d '"' -f2)
     if [[ "$RESULT" != "" ]]; then
